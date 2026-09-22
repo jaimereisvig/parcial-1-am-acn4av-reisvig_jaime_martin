@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, IngredientesActivity.class);
-                intent.putExtra(IngredientesActivity.EXTRA_MENSAJE, "Bienvenido a Ingredientes");
                 startActivity(intent);
             }
         });
