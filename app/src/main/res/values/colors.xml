@@ -2,4 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Paleta MenuCompras (modo claro) -->
+    <color name="mc_bg">#F1F2F4</color>
+    <color name="mc_surface">#FFFFFF</color>
+    <color name="mc_ink">#292F3D</color>
+    <color name="mc_muted">#5F6470</color>
+    <color name="mc_line">#E3E5EA</color>
+    <color name="mc_accent">#2659D9</color>
+    <color name="mc_accent_ink">#FFFFFF</color>
+    <color name="mc_danger">#D64545</color>
+    <color name="mc_ok">#2F9E5F</color>
+    <color name="mc_band">#F4F5F7</color>
+    <color name="mc_brand">#2659D9</color>
+    <color name="mc_brand_wheel">#D9A83A</color>
+    <color name="mc_accent_soft">#242659D9</color>
 </resources>
