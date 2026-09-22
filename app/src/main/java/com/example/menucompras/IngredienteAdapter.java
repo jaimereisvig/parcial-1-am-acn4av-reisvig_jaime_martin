@@ -14,10 +14,19 @@ import java.util.List;
 
 public class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.IngredienteViewHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(Ingrediente ingrediente);
+    }
+
     private final List<Ingrediente> ingredientes;
+    private OnItemClickListener listener;
 
     public IngredienteAdapter(List<Ingrediente> ingredientes) {
         this.ingredientes = ingredientes;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,7 +39,7 @@ public class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull IngredienteViewHolder holder, int position) {
-        Ingrediente ing = ingredientes.get(position);
+        final Ingrediente ing = ingredientes.get(position);
 
         holder.tvNombre.setText(ing.getNombre());
         holder.tvGondola.setText(ing.getCategoria().getEtiqueta());
@@ -41,6 +50,15 @@ public class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.
         } else {
             holder.tvEnUso.setVisibility(View.GONE);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(ing);
+                }
+            }
+        });
     }
 
     @Override

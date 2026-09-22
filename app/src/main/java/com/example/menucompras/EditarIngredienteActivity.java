@@ -1,0 +1,200 @@
+package com.example.menucompras;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.text.Editable;
+import android.text.TextWatcher;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.menucompras.modelo.Categoria;
+import com.example.menucompras.modelo.Ingrediente;
+import com.example.menucompras.modelo.TipoMedida;
+
+public class EditarIngredienteActivity extends AppCompatActivity {
+
+    public static final String EXTRA_ID = "com.example.menucompras.ID_INGREDIENTE";
+
+    private EditText etNombre, etPresentacionCantidad, etNombrePresentacion, etNombreUnidad;
+    private Spinner spGondola, spTipoMedida;
+    private TextView tvTitulo, tvEnUso;
+    private Button btnBorrar, btnCancelar, btnGuardar;
+
+    private RepositorioIngredientes repo;
+    private int idEnEdicion = 0; // 0 = alta (ningún ingrediente)
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_editar_ingrediente);
+
+        repo = RepositorioIngredientes.getInstancia();
+
+        tvTitulo = findViewById(R.id.tv_titulo_form);
+        etNombre = findViewById(R.id.et_nombre);
+        spGondola = findViewById(R.id.sp_gondola);
+        spTipoMedida = findViewById(R.id.sp_tipo_medida);
+        etPresentacionCantidad = findViewById(R.id.et_presentacion_cantidad);
+        etNombrePresentacion = findViewById(R.id.et_nombre_presentacion);
+        etNombreUnidad = findViewById(R.id.et_nombre_unidad);
+        tvEnUso = findViewById(R.id.tv_en_uso_form);
+        btnBorrar = findViewById(R.id.btn_borrar);
+        btnCancelar = findViewById(R.id.btn_cancelar);
+        btnGuardar = findViewById(R.id.btn_guardar);
+
+        spGondola.setAdapter(adaptadorEtiquetas(etiquetasGondolas()));
+        spTipoMedida.setAdapter(adaptadorEtiquetas(etiquetasTiposMedida()));
+
+        idEnEdicion = getIntent().getIntExtra(EXTRA_ID, 0);
+        if (idEnEdicion != 0) {
+            configurarModoEdicion();
+        } else {
+            configurarModoAlta();
+        }
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { finish(); }
+        });
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { guardar(); }
+        });
+        btnBorrar.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { intentarBorrar(); }
+        });
+
+        etNombre.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(Editable s) {
+                validarNombreDuplicado();
+            }
+        });    }
+
+    private String[] etiquetasGondolas() {
+        Categoria[] valores = Categoria.values();
+        String[] etiquetas = new String[valores.length];
+        for (int i = 0; i < valores.length; i++) etiquetas[i] = valores[i].getEtiqueta();
+        return etiquetas;
+    }
+
+    private String[] etiquetasTiposMedida() {
+        TipoMedida[] valores = TipoMedida.values();
+        String[] etiquetas = new String[valores.length];
+        for (int i = 0; i < valores.length; i++) etiquetas[i] = valores[i].getEtiqueta();
+        return etiquetas;
+    }
+
+    private ArrayAdapter<String> adaptadorEtiquetas(String[] etiquetas) {
+        ArrayAdapter<String> a = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, etiquetas);
+        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return a;
+    }
+
+    private void configurarModoAlta() {
+        tvTitulo.setText("Nuevo ingrediente");
+        tvEnUso.setVisibility(View.GONE);
+        btnBorrar.setVisibility(View.GONE);
+    }
+
+    private void configurarModoEdicion() {
+        Ingrediente ing = repo.buscarPorId(idEnEdicion);
+        if (ing == null) { finish(); return; }
+
+        tvTitulo.setText("Editar ingrediente");
+        etNombre.setText(ing.getNombre());
+        spGondola.setSelection(ing.getCategoria().ordinal());
+        spTipoMedida.setSelection(ing.getTipoMedida().ordinal());
+        etPresentacionCantidad.setText(String.valueOf(ing.getPresentacionCantidad()));
+        etNombrePresentacion.setText(ing.getNombrePresentacion());
+        etNombreUnidad.setText(ing.getNombreUnidad());
+
+        tvEnUso.setVisibility(View.VISIBLE);
+        btnBorrar.setVisibility(View.VISIBLE);
+        if (ing.getEnUso() > 0) {
+            tvEnUso.setText("En uso en " + ing.getEnUso() + " comida(s). No se puede eliminar mientras esté en uso.");
+            btnBorrar.setEnabled(false);
+        } else {
+            tvEnUso.setText("Sin uso en comidas.");
+            btnBorrar.setEnabled(true);
+        }
+    }
+
+    private void guardar() {
+        String nombre = etNombre.getText().toString().trim();
+        if (nombre.isEmpty()) {
+            etNombre.setError("Ingresá un nombre");
+            etNombre.requestFocus();
+            return;
+        }
+        if (repo.existeNombre(nombre, idEnEdicion)) {
+            etNombre.setError("Ya existe un ingrediente con ese nombre");
+            etNombre.requestFocus();
+            return;
+        }
+
+        double cantidad;
+        try {
+            cantidad = Double.parseDouble(etPresentacionCantidad.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            etPresentacionCantidad.setError("Ingresá una cantidad válida");
+            etPresentacionCantidad.requestFocus();
+            return;
+        }
+        if (cantidad <= 0) {
+            etPresentacionCantidad.setError("La cantidad debe ser mayor a 0");
+            etPresentacionCantidad.requestFocus();
+            return;
+        }
+
+        Categoria categoria = Categoria.values()[spGondola.getSelectedItemPosition()];
+        TipoMedida tipoMedida = TipoMedida.values()[spTipoMedida.getSelectedItemPosition()];
+        String nombrePresentacion = etNombrePresentacion.getText().toString().trim();
+        String nombreUnidad = etNombreUnidad.getText().toString().trim();
+
+        if (idEnEdicion != 0) {
+            int enUso = repo.buscarPorId(idEnEdicion).getEnUso(); // se conserva
+            repo.actualizar(new Ingrediente(idEnEdicion, nombre, tipoMedida, cantidad,
+                    nombrePresentacion, nombreUnidad, categoria, enUso));
+        } else {
+            repo.agregar(new Ingrediente(repo.nuevoId(), nombre, tipoMedida, cantidad,
+                    nombrePresentacion, nombreUnidad, categoria, 0));
+        }
+        finish();
+    }
+
+    private void validarNombreDuplicado() {
+        String nombre = etNombre.getText().toString().trim();
+        if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
+            etNombre.setError("Ya existe un ingrediente con ese nombre");
+        } else {
+            etNombre.setError(null);
+        }
+    }
+    private void intentarBorrar() {
+        Ingrediente ing = repo.buscarPorId(idEnEdicion);
+        if (ing == null) { finish(); return; }
+        if (ing.getEnUso() > 0) {
+            Toast.makeText(this, "No se puede eliminar: está en uso", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Eliminar ingrediente")
+                .setMessage("¿Eliminar \"" + ing.getNombre() + "\"? Esta acción no se puede deshacer.")
+                .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        repo.eliminar(idEnEdicion);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+}
