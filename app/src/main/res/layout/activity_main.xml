@@ -1,30 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:background="@color/mc_bg">
 
-    <TextView
-        android:id="@+id/txtTituloApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MenuCompras"
-        android:textSize="28sp"
-        android:layout_marginBottom="48dp" />
-
-    <Button
-        android:id="@+id/btnIngredientes"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ingredientes"
-        android:layout_marginBottom="16dp" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
 
-    <Button
-        android:id="@+id/btnComidas"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Comidas" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="MenuCompras"
+            android:textColor="@color/mc_ink"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/hero_changuito"
+            android:scaleType="fitCenter"
+            android:contentDescription="Ilustración de un carrito de compras" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Del menú al changuito, sin vueltas"
+            android:textColor="@color/mc_ink"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Planificás la semana y la lista se arma sola, ordenada por góndola."
+            android:textColor="@color/mc_muted"
+            android:textSize="15sp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btn_armar_menu"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:text="Armar el menú de la semana"
+            android:textColor="@color/mc_accent_ink"
+            android:backgroundTint="@color/mc_accent" />
+
+        <TextView
+            android:id="@+id/tv_como_funciona"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="8dp"
+            android:text="¿Cómo funciona?"
+            android:textColor="@color/mc_accent"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/mc_line" />
+
+        <Button
+            android:id="@+id/btn_ir_ingredientes"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Ingredientes"
+            android:textColor="@color/mc_ink"
+            android:backgroundTint="@color/mc_surface" />
+
+        <Button
+            android:id="@+id/btn_ir_comidas"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Comidas"
+            android:textColor="@color/mc_ink"
+            android:backgroundTint="@color/mc_surface" />
+
+        <Button
+            android:id="@+id/btn_ir_menus"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Menús"
+            android:textColor="@color/mc_ink"
+            android:backgroundTint="@color/mc_surface" />
+
+    </LinearLayout>
+</ScrollView>
