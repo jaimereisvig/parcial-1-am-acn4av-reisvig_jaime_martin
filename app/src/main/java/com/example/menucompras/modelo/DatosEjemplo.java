@@ -20,9 +20,20 @@ public class DatosEjemplo {
 
     public static List<Comida> getComidas() {
         List<Comida> lista = new ArrayList<>();
-        lista.add(new Comida("Milanesas con puré"));
-        lista.add(new Comida("Tarta de verdura"));
-        lista.add(new Comida("Guiso de lentejas"));
+        lista.add(new Comida(1, "Milanesas con puré", 4, TipoComida.ALMUERZO_CENA,
+                CategoriaComida.CARNES_ROJAS,
+                "Freír o al horno las milanesas; hacer puré con papas, leche y manteca."));
+        lista.add(new Comida(2, "Tarta de verdura", 6, TipoComida.ALMUERZO_CENA,
+                CategoriaComida.TARTAS,
+                "Rehogar la acelga con cebolla, mezclar con huevo y queso, hornear en masa."));
+        lista.add(new Comida(3, "Guiso de lentejas", 4, TipoComida.ALMUERZO_CENA,
+                CategoriaComida.GUISOS_ESTOFADOS,
+                "Hervir las lentejas con verduras, chorizo y panceta."));
+        lista.add(new Comida(4, "Ensalada César", 2, TipoComida.ALMUERZO_CENA,
+                CategoriaComida.ENSALADAS,
+                "Lechuga, croutons, pollo y aderezo césar."));
+        lista.add(new Comida(5, "Panqueques con dulce de leche", 4, TipoComida.DESAYUNO_MERIENDA,
+                CategoriaComida.POSTRES, ""));
         return lista;
     }
 }
