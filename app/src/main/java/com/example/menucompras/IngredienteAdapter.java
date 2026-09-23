@@ -18,7 +18,7 @@ public class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.
         void onItemClick(Ingrediente ingrediente);
     }
 
-    private final List<Ingrediente> ingredientes;
+    private List<Ingrediente> ingredientes;
     private OnItemClickListener listener;
 
     public IngredienteAdapter(List<Ingrediente> ingredientes) {
@@ -27,6 +27,11 @@ public class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setItems(List<Ingrediente> nuevos) {
+        this.ingredientes = nuevos;
+        notifyDataSetChanged();
     }
 
     @NonNull
