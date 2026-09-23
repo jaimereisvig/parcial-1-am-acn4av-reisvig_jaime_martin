@@ -7,7 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -16,16 +17,43 @@
             android:textColor="@color/mc_ink"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:padding="16dp" />
+            android:layout_marginBottom="12dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_ingredientes"
+        <EditText
+            android:id="@+id/et_buscar"
+            style="@style/McInput"
+            android:inputType="text"
+            android:hint="Buscar ingrediente" />
+
+        <Spinner
+            android:id="@+id/sp_filtro_gondola"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp" />
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="4dp"
-            android:clipToPadding="false" />
+            android:layout_marginTop="12dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_ingredientes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false" />
+
+            <TextView
+                android:id="@+id/tv_vacio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No hay ingredientes que coincidan"
+                android:textColor="@color/mc_muted"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
