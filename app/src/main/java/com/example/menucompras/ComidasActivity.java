@@ -1,50 +1,55 @@
 package com.example.menucompras;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menucompras.modelo.Comida;
-import com.example.menucompras.modelo.DatosEjemplo;
-
-import java.util.List;
 
 public class ComidasActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MENSAJE = "com.example.menucompras.MENSAJE";
+    private ComidaAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comidas);
 
-        // 1) Recibir el dato de la pantalla anterior y validar que llegó
-        TextView txtMensaje = findViewById(R.id.txtMensajeComidas);
-        String mensaje = getIntent().getStringExtra(EXTRA_MENSAJE);
-        if (mensaje != null) {
-            txtMensaje.setText(mensaje);
-        } else {
-            txtMensaje.setText("(sin mensaje)");
-        }
+        RepositorioComidas repo = RepositorioComidas.getInstancia();
 
-        // 2) Cargar comidas de ejemplo y armar el texto
-        TextView txtLista = findViewById(R.id.txtListaComidas);
-        List<Comida> comidas = DatosEjemplo.getComidas();
-        StringBuilder sb = new StringBuilder();
-        for (Comida c : comidas) {
-            sb.append(c.getNombre()).append("\n");
-        }
-        txtLista.setText(sb.toString());
+        RecyclerView rv = findViewById(R.id.rv_comidas);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
-        // 3) Volver
-        Button btnVolver = findViewById(R.id.btnVolverComidas);
-        btnVolver.setOnClickListener(new View.OnClickListener() {
+        adapter = new ComidaAdapter(repo.getTodos());
+        adapter.setOnItemClickListener(new ComidaAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                finish();
+            public void onItemClick(Comida comida) {
+                Intent intent = new Intent(ComidasActivity.this, EditarComidaActivity.class);
+                intent.putExtra(EditarComidaActivity.EXTRA_ID, comida.getId());
+                startActivity(intent);
             }
         });
+        rv.setAdapter(adapter);
+
+        ImageButton fab = findViewById(R.id.fab_nuevo_comida);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ComidasActivity.this, EditarComidaActivity.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 }
