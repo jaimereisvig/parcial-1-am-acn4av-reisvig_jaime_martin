@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mc_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_titulo_comida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mc_ink"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:text="Nueva comida" />
+
+        <!-- Nombre -->
+        <TextView style="@style/McLabel" android:text="Nombre" />
+        <EditText
+            android:id="@+id/et_nombre_comida"
+            style="@style/McInput"
+            android:inputType="textCapSentences"
+            android:hint="Ej. Milanesas con puré" />
+
+        <!-- Comensales -->
+        <TextView style="@style/McLabel" android:text="Cantidad de comensales" />
+        <EditText
+            android:id="@+id/et_comensales"
+            style="@style/McInput"
+            android:inputType="number"
+            android:hint="Ej. 4" />
+
+        <!-- Tipo -->
+        <TextView style="@style/McLabel" android:text="Tipo" />
+        <Spinner
+            android:id="@+id/sp_tipo_comida"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Categoría -->
+        <TextView style="@style/McLabel" android:text="Categoría" />
+        <Spinner
+            android:id="@+id/sp_categoria_comida"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Preparación -->
+        <TextView style="@style/McLabel" android:text="Preparación (opcional)" />
+        <EditText
+            android:id="@+id/et_preparacion"
+            style="@style/McInput"
+            android:inputType="textmultiLine|textCapSentences"
+            android:minLines="3"
+            android:gravity="top"
+            android:hint="Paso a paso de la receta" />
+
+        <!-- Borrar (solo en editar) -->
+        <Button
+            android:id="@+id/btn_borrar_comida"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="Eliminar comida"
+            android:textColor="@color/mc_accent_ink"
+            android:backgroundTint="@color/mc_danger"
+            android:visibility="gone" />
+
+        <!-- Cancelar / Guardar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/btn_cancelar_comida"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Cancelar"
+                android:textColor="@color/mc_ink"
+                android:backgroundTint="@color/mc_band" />
+
+            <Button
+                android:id="@+id/btn_guardar_comida"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Guardar"
+                android:textColor="@color/mc_accent_ink"
+                android:backgroundTint="@color/mc_accent" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
