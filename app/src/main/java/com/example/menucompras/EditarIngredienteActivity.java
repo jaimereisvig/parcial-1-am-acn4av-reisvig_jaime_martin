@@ -2,6 +2,8 @@ package com.example.menucompras;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -9,8 +11,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.text.Editable;
-import android.text.TextWatcher;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +29,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
     private Button btnBorrar, btnCancelar, btnGuardar;
 
     private RepositorioIngredientes repo;
-    private int idEnEdicion = 0; // 0 = alta (ningún ingrediente)
+    private int idEnEdicion = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +73,9 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         etNombre.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override public void afterTextChanged(Editable s) {
-                validarNombreDuplicado();
-            }
-        });    }
+            @Override public void afterTextChanged(Editable s) { validarNombreDuplicado(); }
+        });
+    }
 
     private String[] etiquetasGondolas() {
         Categoria[] valores = Categoria.values();
@@ -118,12 +117,22 @@ public class EditarIngredienteActivity extends AppCompatActivity {
 
         tvEnUso.setVisibility(View.VISIBLE);
         btnBorrar.setVisibility(View.VISIBLE);
-        if (ing.getEnUso() > 0) {
-            tvEnUso.setText("En uso en " + ing.getEnUso() + " comida(s). No se puede eliminar mientras esté en uso.");
+        int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId());
+        if (enUso > 0) {
+            tvEnUso.setText("En uso en " + enUso + " comida(s). No se puede eliminar mientras esté en uso.");
             btnBorrar.setEnabled(false);
         } else {
             tvEnUso.setText("Sin uso en comidas.");
             btnBorrar.setEnabled(true);
+        }
+    }
+
+    private void validarNombreDuplicado() {
+        String nombre = etNombre.getText().toString().trim();
+        if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
+            etNombre.setError("Ya existe un ingrediente con ese nombre");
+        } else {
+            etNombre.setError(null);
         }
     }
 
@@ -160,28 +169,20 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         String nombreUnidad = etNombreUnidad.getText().toString().trim();
 
         if (idEnEdicion != 0) {
-            int enUso = repo.buscarPorId(idEnEdicion).getEnUso(); // se conserva
             repo.actualizar(new Ingrediente(idEnEdicion, nombre, tipoMedida, cantidad,
-                    nombrePresentacion, nombreUnidad, categoria, enUso));
+                    nombrePresentacion, nombreUnidad, categoria));
         } else {
             repo.agregar(new Ingrediente(repo.nuevoId(), nombre, tipoMedida, cantidad,
-                    nombrePresentacion, nombreUnidad, categoria, 0));
+                    nombrePresentacion, nombreUnidad, categoria));
         }
         finish();
     }
 
-    private void validarNombreDuplicado() {
-        String nombre = etNombre.getText().toString().trim();
-        if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
-            etNombre.setError("Ya existe un ingrediente con ese nombre");
-        } else {
-            etNombre.setError(null);
-        }
-    }
     private void intentarBorrar() {
         Ingrediente ing = repo.buscarPorId(idEnEdicion);
         if (ing == null) { finish(); return; }
-        if (ing.getEnUso() > 0) {
+        int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId());
+        if (enUso > 0) {
             Toast.makeText(this, "No se puede eliminar: está en uso", Toast.LENGTH_SHORT).show();
             return;
         }
