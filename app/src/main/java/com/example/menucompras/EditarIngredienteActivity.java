@@ -1,6 +1,7 @@
 package com.example.menucompras;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +23,7 @@ import com.example.menucompras.modelo.TipoMedida;
 public class EditarIngredienteActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID = "com.example.menucompras.ID_INGREDIENTE";
+    public static final String EXTRA_ID_CREADO = "com.example.menucompras.ID_INGREDIENTE_CREADO";
 
     private EditText etNombre, etPresentacionCantidad, etNombrePresentacion, etNombreUnidad;
     private Spinner spGondola, spTipoMedida;
@@ -172,8 +174,12 @@ public class EditarIngredienteActivity extends AppCompatActivity {
             repo.actualizar(new Ingrediente(idEnEdicion, nombre, tipoMedida, cantidad,
                     nombrePresentacion, nombreUnidad, categoria));
         } else {
-            repo.agregar(new Ingrediente(repo.nuevoId(), nombre, tipoMedida, cantidad,
+            int nuevoId = repo.nuevoId();
+            repo.agregar(new Ingrediente(nuevoId, nombre, tipoMedida, cantidad,
                     nombrePresentacion, nombreUnidad, categoria));
+            Intent datos = new Intent();
+            datos.putExtra(EXTRA_ID_CREADO, nuevoId);
+            setResult(RESULT_OK, datos);
         }
         finish();
     }

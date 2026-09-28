@@ -55,8 +55,18 @@ public class EditarComidaActivity extends AppCompatActivity {
         lanzadorCrearIngrediente = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 resultado -> {
-                    // Pasos 2–4: acá se procesará el id del ingrediente devuelto.
-                    // Por ahora no hace nada (checkpoint).
+                    if (resultado.getResultCode() == RESULT_OK && resultado.getData() != null) {
+                        int idCreado = resultado.getData()
+                                .getIntExtra(EditarIngredienteActivity.EXTRA_ID_CREADO, 0);
+                        if (idCreado != 0) {
+                            // Paso 4: acá irán D2 (¿ya está en la comida?) + diálogo de cantidad.
+                            // Por ahora, solo feedback para verificar que el id llega.
+                            Ingrediente ing = repoIng.buscarPorId(idCreado);
+                            String nombre = (ing != null) ? ing.getNombre() : "?";
+                            Toast.makeText(this, "Ingrediente creado: " + nombre + " (id " + idCreado + ")",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 });
 
         repo = RepositorioComidas.getInstancia();
