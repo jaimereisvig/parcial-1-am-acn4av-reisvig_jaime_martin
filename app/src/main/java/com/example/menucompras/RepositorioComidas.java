@@ -2,6 +2,7 @@ package com.example.menucompras;
 
 import com.example.menucompras.modelo.Comida;
 import com.example.menucompras.modelo.DatosEjemplo;
+import com.example.menucompras.modelo.LineaDeComida;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,20 @@ public class RepositorioComidas {
             }
         }
         return false;
+    }
+
+    // Cuántas comidas usan un ingrediente (cada comida cuenta una vez)
+    public int contarComidasQueUsan(int ingredienteId) {
+        int n = 0;
+        for (Comida c : comidas) {
+            for (LineaDeComida l : c.getLineas()) {
+                if (l.getIngredienteId() == ingredienteId) {
+                    n++;
+                    break;
+                }
+            }
+        }
+        return n;
     }
 
     public int nuevoId() {
