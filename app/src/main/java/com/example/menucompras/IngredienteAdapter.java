@@ -49,8 +49,9 @@ public class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.
         holder.tvNombre.setText(ing.getNombre());
         holder.tvGondola.setText(ing.getCategoria().getEtiqueta());
 
-        if (ing.getEnUso() > 0) {
-            holder.tvEnUso.setText("en uso · " + ing.getEnUso());
+        int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId()); //mamita!!!
+        if (enUso > 0) {
+            holder.tvEnUso.setText("en uso · " + enUso);
             holder.tvEnUso.setVisibility(View.VISIBLE);
         } else {
             holder.tvEnUso.setVisibility(View.GONE);
