@@ -7,16 +7,25 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menucompras.modelo.CategoriaComida;
 import com.example.menucompras.modelo.Comida;
+import com.example.menucompras.modelo.Ingrediente;
+import com.example.menucompras.modelo.LineaDeComida;
 import com.example.menucompras.modelo.TipoComida;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditarComidaActivity extends AppCompatActivity {
 
@@ -25,10 +34,13 @@ public class EditarComidaActivity extends AppCompatActivity {
     private EditText etNombre, etComensales, etPreparacion;
     private Spinner spTipo, spCategoria;
     private TextView tvTitulo;
-    private Button btnBorrar, btnCancelar, btnGuardar;
+    private Button btnBorrar, btnCancelar, btnGuardar, btnAgregarIngrediente;
+    private LinearLayout llIngredientes;
 
     private RepositorioComidas repo;
+    private RepositorioIngredientes repoIng;
     private int idEnEdicion = 0;
+    private List<LineaDeComida> lineasActuales = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +48,7 @@ public class EditarComidaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_editar_comida);
 
         repo = RepositorioComidas.getInstancia();
+        repoIng = RepositorioIngredientes.getInstancia();
 
         tvTitulo = findViewById(R.id.tv_titulo_comida);
         etNombre = findViewById(R.id.et_nombre_comida);
@@ -46,6 +59,8 @@ public class EditarComidaActivity extends AppCompatActivity {
         btnBorrar = findViewById(R.id.btn_borrar_comida);
         btnCancelar = findViewById(R.id.btn_cancelar_comida);
         btnGuardar = findViewById(R.id.btn_guardar_comida);
+        btnAgregarIngrediente = findViewById(R.id.btn_agregar_ingrediente);
+        llIngredientes = findViewById(R.id.ll_ingredientes);
 
         spTipo.setAdapter(adaptador(etiquetasTipos()));
         spCategoria.setAdapter(adaptador(etiquetasCategorias()));
@@ -56,6 +71,7 @@ public class EditarComidaActivity extends AppCompatActivity {
         } else {
             configurarModoAlta();
         }
+        renderLineas();
 
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { finish(); }
@@ -66,6 +82,9 @@ public class EditarComidaActivity extends AppCompatActivity {
         btnBorrar.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { confirmarBorrado(); }
         });
+        btnAgregarIngrediente.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { mostrarDialogoElegirIngrediente(); }
+        });
 
         etNombre.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -74,6 +93,7 @@ public class EditarComidaActivity extends AppCompatActivity {
         });
     }
 
+    // ---------- Spinners ----------
     private String[] etiquetasTipos() {
         TipoComida[] v = TipoComida.values();
         String[] e = new String[v.length];
@@ -94,10 +114,12 @@ public class EditarComidaActivity extends AppCompatActivity {
         return a;
     }
 
+    // ---------- Modos ----------
     private void configurarModoAlta() {
         tvTitulo.setText("Nueva comida");
         btnBorrar.setVisibility(View.GONE);
-        spCategoria.setSelection(CategoriaComida.VARIOS.ordinal()); // default del modelo
+        spCategoria.setSelection(CategoriaComida.VARIOS.ordinal());
+        lineasActuales = new ArrayList<>();
     }
 
     private void configurarModoEdicion() {
@@ -110,8 +132,123 @@ public class EditarComidaActivity extends AppCompatActivity {
         spCategoria.setSelection(c.getCategoria().ordinal());
         etPreparacion.setText(c.getPreparacion());
         btnBorrar.setVisibility(View.VISIBLE);
+        lineasActuales = new ArrayList<>(c.getLineas()); // copia editable
     }
 
+    // ---------- Ingredientes de la comida ----------
+    private void renderLineas() {
+        llIngredientes.removeAllViews();
+        for (int i = 0; i < lineasActuales.size(); i++) {
+            final int idx = i;
+            LineaDeComida linea = lineasActuales.get(i);
+            View fila = getLayoutInflater().inflate(R.layout.item_linea_comida, llIngredientes, false);
+            TextView tv = fila.findViewById(R.id.tv_linea_ingrediente);
+            TextView btnQuitar = fila.findViewById(R.id.btn_quitar_linea);
+            tv.setText(textoLinea(linea));
+            btnQuitar.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    lineasActuales.remove(idx);
+                    renderLineas();
+                }
+            });
+            llIngredientes.addView(fila);
+        }
+    }
+
+    private String textoLinea(LineaDeComida linea) {
+        Ingrediente ing = repoIng.buscarPorId(linea.getIngredienteId());
+        String nombre = (ing != null) ? ing.getNombre() : "(ingrediente eliminado)";
+        if (linea.isAGusto()) {
+            return nombre + " — a gusto";
+        }
+        String unidad = (ing != null) ? ing.getTipoMedida().getUnidadBase() : "";
+        return nombre + " — " + formatCantidad(linea.getCantidad()) + " " + unidad;
+    }
+
+    private String formatCantidad(double c) {
+        if (c == Math.floor(c)) return String.valueOf((long) c);
+        return String.valueOf(c);
+    }
+
+    private boolean yaAgregado(int ingredienteId) {
+        for (LineaDeComida l : lineasActuales) {
+            if (l.getIngredienteId() == ingredienteId) return true;
+        }
+        return false;
+    }
+
+    private void mostrarDialogoElegirIngrediente() {
+        final List<Ingrediente> disponibles = new ArrayList<>();
+        for (Ingrediente ing : repoIng.getTodos()) {
+            if (!yaAgregado(ing.getId())) disponibles.add(ing);
+        }
+        if (disponibles.isEmpty()) {
+            Toast.makeText(this, "No hay más ingredientes para agregar", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String[] nombres = new String[disponibles.size()];
+        for (int i = 0; i < disponibles.size(); i++) nombres[i] = disponibles.get(i).getNombre();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Elegir ingrediente")
+                .setItems(nombres, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        mostrarDialogoCantidad(disponibles.get(which));
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void mostrarDialogoCantidad(final Ingrediente ing) {
+        View vista = getLayoutInflater().inflate(R.layout.dialog_cantidad, null);
+        final EditText etCantidad = vista.findViewById(R.id.et_cantidad_dialog);
+        final CheckBox cbAGusto = vista.findViewById(R.id.cb_a_gusto);
+
+        cbAGusto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton b, boolean isChecked) {
+                etCantidad.setEnabled(!isChecked);
+                if (isChecked) etCantidad.setError(null);
+            }
+        });
+
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(ing.getNombre())
+                .setView(vista)
+                .setPositiveButton("Agregar", null)
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override public void onShow(DialogInterface d) {
+                Button positivo = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positivo.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        boolean aGusto = cbAGusto.isChecked();
+                        double cantidad = 0;
+                        if (!aGusto) {
+                            try {
+                                cantidad = Double.parseDouble(etCantidad.getText().toString().trim());
+                            } catch (NumberFormatException e) {
+                                etCantidad.setError("Ingresá una cantidad");
+                                return;
+                            }
+                            if (cantidad <= 0) {
+                                etCantidad.setError("Debe ser mayor a 0");
+                                return;
+                            }
+                        }
+                        lineasActuales.add(new LineaDeComida(ing.getId(), cantidad, aGusto));
+                        renderLineas();
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+        dialog.show();
+    }
+
+    // ---------- Validación / guardar / borrar ----------
     private void validarNombreDuplicado() {
         String nombre = etNombre.getText().toString().trim();
         if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
@@ -153,9 +290,9 @@ public class EditarComidaActivity extends AppCompatActivity {
         String preparacion = etPreparacion.getText().toString().trim();
 
         if (idEnEdicion != 0) {
-            repo.actualizar(new Comida(idEnEdicion, nombre, comensales, tipo, categoria, preparacion));
+            repo.actualizar(new Comida(idEnEdicion, nombre, comensales, tipo, categoria, preparacion, lineasActuales));
         } else {
-            repo.agregar(new Comida(repo.nuevoId(), nombre, comensales, tipo, categoria, preparacion));
+            repo.agregar(new Comida(repo.nuevoId(), nombre, comensales, tipo, categoria, preparacion, lineasActuales));
         }
         finish();
     }
