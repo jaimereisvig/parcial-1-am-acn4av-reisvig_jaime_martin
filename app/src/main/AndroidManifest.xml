@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditarIngredienteActivity" />
+        <activity android:name=".EditarComidaActivity" />
     </application>
 
 </manifest>
