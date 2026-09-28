@@ -50,6 +50,14 @@ public class RepositorioIngredientes {
         return false;
     }
 
+    public Ingrediente buscarPorNombre(String nombre) {
+        String buscado = nombre.trim();
+        for (Ingrediente ing : ingredientes) {
+            if (ing.getNombre().equalsIgnoreCase(buscado)) return ing;
+        }
+        return null;
+    }
+
     public int nuevoId() {
         return siguienteId++;
     }

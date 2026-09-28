@@ -111,7 +111,8 @@ public class EditarComidaActivity extends AppCompatActivity {
         Button btnCrear = findViewById(R.id.btn_crear_ingrediente);
         btnCrear.setOnClickListener(v -> {
             Intent intent = new Intent(this, EditarIngredienteActivity.class);
-            // Sin EXTRA_ID => la actividad abre en modo ALTA.
+            // Sin EXTRA_ID => modo ALTA. Con EN_CONTEXTO => habilita "usar existente" ante duplicado.
+            intent.putExtra(EditarIngredienteActivity.EXTRA_EN_CONTEXTO, true);
             lanzadorCrearIngrediente.launch(intent);
         });
 

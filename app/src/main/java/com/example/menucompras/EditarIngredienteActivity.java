@@ -24,6 +24,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID = "com.example.menucompras.ID_INGREDIENTE";
     public static final String EXTRA_ID_CREADO = "com.example.menucompras.ID_INGREDIENTE_CREADO";
+    public static final String EXTRA_EN_CONTEXTO = "com.example.menucompras.EN_CONTEXTO_COMIDA";
 
     private EditText etNombre, etPresentacionCantidad, etNombrePresentacion, etNombreUnidad;
     private Spinner spGondola, spTipoMedida;
@@ -32,6 +33,8 @@ public class EditarIngredienteActivity extends AppCompatActivity {
 
     private RepositorioIngredientes repo;
     private int idEnEdicion = 0;
+    private boolean enContexto = false;
+    private boolean dialogoDuplicadoVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         spTipoMedida.setAdapter(adaptadorEtiquetas(etiquetasTiposMedida()));
 
         idEnEdicion = getIntent().getIntExtra(EXTRA_ID, 0);
+        enContexto = getIntent().getBooleanExtra(EXTRA_EN_CONTEXTO, false);
         if (idEnEdicion != 0) {
             configurarModoEdicion();
         } else {
@@ -76,6 +80,17 @@ public class EditarIngredienteActivity extends AppCompatActivity {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable s) { validarNombreDuplicado(); }
+        });
+
+        etNombre.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && enContexto && idEnEdicion == 0) {
+                    String nombre = etNombre.getText().toString().trim();
+                    if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
+                        mostrarDialogoUsarExistente(nombre);
+                    }
+                }
+            }
         });
     }
 
@@ -130,6 +145,10 @@ public class EditarIngredienteActivity extends AppCompatActivity {
     }
 
     private void validarNombreDuplicado() {
+        if (enContexto) {
+            etNombre.setError(null);
+            return;
+        }
         String nombre = etNombre.getText().toString().trim();
         if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
             etNombre.setError("Ya existe un ingrediente con ese nombre");
@@ -146,8 +165,12 @@ public class EditarIngredienteActivity extends AppCompatActivity {
             return;
         }
         if (repo.existeNombre(nombre, idEnEdicion)) {
-            etNombre.setError("Ya existe un ingrediente con ese nombre");
-            etNombre.requestFocus();
+            if (idEnEdicion == 0 && enContexto) {
+                mostrarDialogoUsarExistente(nombre);
+            } else {
+                etNombre.setError("Ya existe un ingrediente con ese nombre");
+                etNombre.requestFocus();
+            }
             return;
         }
 
@@ -182,6 +205,30 @@ public class EditarIngredienteActivity extends AppCompatActivity {
             setResult(RESULT_OK, datos);
         }
         finish();
+    }
+
+    private void mostrarDialogoUsarExistente(final String nombre) {
+        if (dialogoDuplicadoVisible) return;
+        final Ingrediente existente = repo.buscarPorNombre(nombre);
+        if (existente == null) return;
+        dialogoDuplicadoVisible = true;
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Ya existe")
+                .setMessage("Ya existe \"" + existente.getNombre() + "\". ¿Querés usar el existente?")
+                .setPositiveButton("Usar existente", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface d, int which) {
+                        Intent datos = new Intent();
+                        datos.putExtra(EXTRA_ID_CREADO, existente.getId());
+                        setResult(RESULT_OK, datos);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .create();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override public void onDismiss(DialogInterface d) { dialogoDuplicadoVisible = false; }
+        });
+        dialog.show();
     }
 
     private void intentarBorrar() {
