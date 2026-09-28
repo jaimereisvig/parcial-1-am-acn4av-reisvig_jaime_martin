@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         btnIrComidas.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ComidasActivity.class);
-                intent.putExtra(ComidasActivity.EXTRA_MENSAJE, "Bienvenido a Comidas");
                 startActivity(intent);
             }
         });

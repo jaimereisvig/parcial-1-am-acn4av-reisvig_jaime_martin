@@ -57,7 +57,7 @@
         <EditText
             android:id="@+id/et_preparacion"
             style="@style/McInput"
-            android:inputType="textmultiLine|textCapSentences"
+            android:inputType="textMultiLine|textCapSentences"
             android:minLines="3"
             android:gravity="top"
             android:hint="Paso a paso de la receta" />
