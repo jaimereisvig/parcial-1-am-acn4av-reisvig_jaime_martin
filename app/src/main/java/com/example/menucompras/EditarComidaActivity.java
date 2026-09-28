@@ -59,12 +59,7 @@ public class EditarComidaActivity extends AppCompatActivity {
                         int idCreado = resultado.getData()
                                 .getIntExtra(EditarIngredienteActivity.EXTRA_ID_CREADO, 0);
                         if (idCreado != 0) {
-                            // Paso 4: acá irán D2 (¿ya está en la comida?) + diálogo de cantidad.
-                            // Por ahora, solo feedback para verificar que el id llega.
-                            Ingrediente ing = repoIng.buscarPorId(idCreado);
-                            String nombre = (ing != null) ? ing.getNombre() : "?";
-                            Toast.makeText(this, "Ingrediente creado: " + nombre + " (id " + idCreado + ")",
-                                    Toast.LENGTH_SHORT).show();
+                            agregarIngredienteResuelto(idCreado);
                         }
                     }
                 });
@@ -205,6 +200,20 @@ public class EditarComidaActivity extends AppCompatActivity {
             if (l.getIngredienteId() == ingredienteId) return true;
         }
         return false;
+    }
+
+    private void agregarIngredienteResuelto(int ingredienteId) {
+        Ingrediente ing = repoIng.buscarPorId(ingredienteId);
+        if (ing == null) return;
+        if (yaAgregado(ingredienteId)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Ya está en la comida")
+                    .setMessage("\"" + ing.getNombre() + "\" ya está en esta comida.")
+                    .setPositiveButton("Aceptar", null)
+                    .show();
+            return;
+        }
+        mostrarDialogoCantidad(ing);
     }
 
     private void mostrarDialogoElegirIngrediente() {
