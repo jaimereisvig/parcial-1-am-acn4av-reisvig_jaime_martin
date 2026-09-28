@@ -81,6 +81,15 @@
             android:textColor="@color/mc_accent"
             android:backgroundTint="@color/mc_surface" />
 
+        <Button
+            android:id="@+id/btn_crear_ingrediente"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Crear ingrediente nuevo"
+            android:textColor="@color/mc_accent"
+            android:backgroundTint="@color/mc_surface" />
+
         <!-- Borrar (solo en editar) -->
         <Button
             android:id="@+id/btn_borrar_comida"

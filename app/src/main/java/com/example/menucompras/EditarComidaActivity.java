@@ -24,6 +24,10 @@ import com.example.menucompras.modelo.Ingrediente;
 import com.example.menucompras.modelo.LineaDeComida;
 import com.example.menucompras.modelo.TipoComida;
 
+import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +45,19 @@ public class EditarComidaActivity extends AppCompatActivity {
     private RepositorioIngredientes repoIng;
     private int idEnEdicion = 0;
     private List<LineaDeComida> lineasActuales = new ArrayList<>();
+    private ActivityResultLauncher<Intent> lanzadorCrearIngrediente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_comida);
+
+        lanzadorCrearIngrediente = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                resultado -> {
+                    // Pasos 2–4: acá se procesará el id del ingrediente devuelto.
+                    // Por ahora no hace nada (checkpoint).
+                });
 
         repo = RepositorioComidas.getInstancia();
         repoIng = RepositorioIngredientes.getInstancia();
@@ -84,6 +96,13 @@ public class EditarComidaActivity extends AppCompatActivity {
         });
         btnAgregarIngrediente.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { mostrarDialogoElegirIngrediente(); }
+        });
+
+        Button btnCrear = findViewById(R.id.btn_crear_ingrediente);
+        btnCrear.setOnClickListener(v -> {
+            Intent intent = new Intent(this, EditarIngredienteActivity.class);
+            // Sin EXTRA_ID => la actividad abre en modo ALTA.
+            lanzadorCrearIngrediente.launch(intent);
         });
 
         etNombre.addTextChangedListener(new TextWatcher() {
