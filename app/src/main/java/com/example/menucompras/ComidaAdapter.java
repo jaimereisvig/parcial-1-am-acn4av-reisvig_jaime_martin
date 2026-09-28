@@ -47,7 +47,8 @@ public class ComidaAdapter extends RecyclerView.Adapter<ComidaAdapter.ComidaView
         final Comida comida = comidas.get(position);
         holder.tvNombre.setText(comida.getNombre());
         holder.tvCategoria.setText(comida.getCategoria().getEtiqueta());
-        holder.tvRinde.setText("rinde " + comida.getComensalesBase());
+        int nIngr = comida.getLineas().size();
+        holder.tvRinde.setText("rinde " + comida.getComensalesBase() + " · " + nIngr + " ingr.");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

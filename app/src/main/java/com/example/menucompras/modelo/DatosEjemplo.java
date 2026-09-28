@@ -22,18 +22,29 @@ public class DatosEjemplo {
         List<Comida> lista = new ArrayList<>();
         lista.add(new Comida(1, "Milanesas con puré", 4, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.CARNES_ROJAS,
-                "Freír o al horno las milanesas; hacer puré con papas, leche y manteca."));
+                "Freír o al horno las milanesas; hacer puré con papas, leche y manteca.",
+                lineas(new LineaDeComida(3, 500, false), new LineaDeComida(7, 200, false))));
         lista.add(new Comida(2, "Tarta de verdura", 6, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.TARTAS,
-                "Rehogar la acelga con cebolla, mezclar con huevo y queso, hornear en masa."));
+                "Rehogar la acelga con cebolla, mezclar con huevo y queso, hornear en masa.",
+                lineas(new LineaDeComida(2, 2, false), new LineaDeComida(5, 200, false), new LineaDeComida(7, 100, false))));
         lista.add(new Comida(3, "Guiso de lentejas", 4, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.GUISOS_ESTOFADOS,
-                "Hervir las lentejas con verduras, chorizo y panceta."));
+                "Hervir las lentejas con verduras, chorizo y panceta.",
+                lineas(new LineaDeComida(2, 1, false), new LineaDeComida(1, 3, false))));
         lista.add(new Comida(4, "Ensalada César", 2, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.ENSALADAS,
-                "Lechuga, croutons, pollo y aderezo césar."));
+                "Lechuga, croutons, pollo y aderezo césar.",
+                lineas(new LineaDeComida(4, 300, false), new LineaDeComida(8, 1, false))));
         lista.add(new Comida(5, "Panqueques con dulce de leche", 4, TipoComida.DESAYUNO_MERIENDA,
-                CategoriaComida.POSTRES, ""));
+                CategoriaComida.POSTRES, "",
+                lineas(new LineaDeComida(7, 500, false))));
         return lista;
+    }
+
+    private static List<LineaDeComida> lineas(LineaDeComida... items) {
+        List<LineaDeComida> l = new ArrayList<>();
+        for (LineaDeComida x : items) l.add(x);
+        return l;
     }
 }
