@@ -19,6 +19,7 @@
 
     <!-- Tipografía -->
     <dimen name="text_chip">12sp</dimen>
+    <dimen name="text_label">13sp</dimen>
     <dimen name="text_action">14sp</dimen>
     <dimen name="text_body">15sp</dimen>
     <dimen name="text_title_item">16sp</dimen>
