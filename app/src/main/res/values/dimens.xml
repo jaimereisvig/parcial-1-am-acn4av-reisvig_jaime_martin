@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Espaciados (márgenes / paddings) -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">12dp</dimen>
+    <dimen name="space_lg">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+
+    <!-- Medidas de componentes -->
+    <dimen name="touch_height">48dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="hero_size">200dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="chip_padding_h">10dp</dimen>
+
+    <!-- Tipografía -->
+    <dimen name="text_chip">12sp</dimen>
+    <dimen name="text_action">14sp</dimen>
+    <dimen name="text_body">15sp</dimen>
+    <dimen name="text_title_item">16sp</dimen>
+    <dimen name="text_brand">20sp</dimen>
+    <dimen name="text_title_screen">22sp</dimen>
+    <dimen name="text_hero">26sp</dimen>
+</resources>
