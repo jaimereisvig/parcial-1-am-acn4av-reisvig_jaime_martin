@@ -8,19 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/space_lg">
 
         <TextView
             android:id="@+id/tv_titulo_form"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/mc_ink"
-            android:textSize="22sp"
+            android:textSize="@dimen/text_title_screen"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/space_lg"
             android:text="Nuevo ingrediente" />
 
-        <!-- Nombre -->
         <TextView style="@style/McLabel" android:text="Nombre" />
         <EditText
             android:id="@+id/et_nombre"
@@ -28,23 +27,20 @@
             android:inputType="textCapSentences"
             android:hint="Ej. Tomate perita" />
 
-        <!-- Góndola -->
         <TextView style="@style/McLabel" android:text="Categoría / góndola" />
         <Spinner
             android:id="@+id/sp_gondola"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp" />
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_xs" />
 
-        <!-- Tipo de medida -->
         <TextView style="@style/McLabel" android:text="Tipo de medida" />
         <Spinner
             android:id="@+id/sp_tipo_medida"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp" />
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_xs" />
 
-        <!-- Presentación: cantidad -->
         <TextView style="@style/McLabel" android:text="Presentación (cantidad)" />
         <EditText
             android:id="@+id/et_presentacion_cantidad"
@@ -52,7 +48,6 @@
             android:inputType="numberDecimal"
             android:hint="Ej. 1000" />
 
-        <!-- Nombre presentación -->
         <TextView style="@style/McLabel" android:text="Nombre de la presentación (opcional)" />
         <EditText
             android:id="@+id/et_nombre_presentacion"
@@ -60,7 +55,6 @@
             android:inputType="text"
             android:hint="Ej. paquete" />
 
-        <!-- Nombre unidad -->
         <TextView style="@style/McLabel" android:text="Nombre de la unidad (opcional)" />
         <EditText
             android:id="@+id/et_nombre_unidad"
@@ -68,38 +62,35 @@
             android:inputType="text"
             android:hint="Ej. g" />
 
-        <!-- En uso (solo en editar) -->
         <TextView
             android:id="@+id/tv_en_uso_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/space_lg"
             android:textColor="@color/mc_muted"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_action"
             android:visibility="gone" />
 
-        <!-- Borrar (solo en editar) -->
         <Button
             android:id="@+id/btn_borrar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_md"
             android:text="Eliminar ingrediente"
             android:textColor="@color/mc_accent_ink"
             android:backgroundTint="@color/mc_danger"
             android:visibility="gone" />
 
-        <!-- Cancelar / Guardar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="24dp">
+            android:layout_marginTop="@dimen/space_xl">
 
             <Button
                 android:id="@+id/btn_cancelar"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/touch_height"
                 android:layout_weight="1"
                 android:text="Cancelar"
                 android:textColor="@color/mc_ink"
@@ -108,9 +99,9 @@
             <Button
                 android:id="@+id/btn_guardar"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/touch_height"
                 android:layout_weight="1"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="@dimen/space_md"
                 android:text="Guardar"
                 android:textColor="@color/mc_accent_ink"
                 android:backgroundTint="@color/mc_accent" />

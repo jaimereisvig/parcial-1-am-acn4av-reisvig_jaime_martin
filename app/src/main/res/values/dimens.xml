@@ -15,6 +15,7 @@
     <dimen name="hero_size">200dp</dimen>
     <dimen name="divider_height">1dp</dimen>
     <dimen name="chip_padding_h">10dp</dimen>
+    <dimen name="dialog_padding">20dp</dimen>
 
     <!-- Tipografía -->
     <dimen name="text_chip">12sp</dimen>

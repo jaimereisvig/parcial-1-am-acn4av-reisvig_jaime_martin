@@ -8,19 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/space_lg">
 
         <TextView
             android:id="@+id/tv_titulo_comida"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/mc_ink"
-            android:textSize="22sp"
+            android:textSize="@dimen/text_title_screen"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/space_lg"
             android:text="Nueva comida" />
 
-        <!-- Nombre -->
         <TextView style="@style/McLabel" android:text="Nombre" />
         <EditText
             android:id="@+id/et_nombre_comida"
@@ -28,7 +27,6 @@
             android:inputType="textCapSentences"
             android:hint="Ej. Milanesas con puré" />
 
-        <!-- Comensales -->
         <TextView style="@style/McLabel" android:text="Cantidad de comensales" />
         <EditText
             android:id="@+id/et_comensales"
@@ -36,23 +34,20 @@
             android:inputType="number"
             android:hint="Ej. 4" />
 
-        <!-- Tipo -->
         <TextView style="@style/McLabel" android:text="Tipo" />
         <Spinner
             android:id="@+id/sp_tipo_comida"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp" />
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_xs" />
 
-        <!-- Categoría -->
         <TextView style="@style/McLabel" android:text="Categoría" />
         <Spinner
             android:id="@+id/sp_categoria_comida"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp" />
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_xs" />
 
-        <!-- Preparación -->
         <TextView style="@style/McLabel" android:text="Preparación (opcional)" />
         <EditText
             android:id="@+id/et_preparacion"
@@ -62,7 +57,6 @@
             android:gravity="top"
             android:hint="Paso a paso de la receta" />
 
-        <!-- Ingredientes de la comida -->
         <TextView style="@style/McLabel" android:text="Ingredientes" />
 
         <LinearLayout
@@ -70,13 +64,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="@dimen/space_xs" />
 
         <Button
             android:id="@+id/btn_agregar_ingrediente"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_sm"
             android:text="Agregar ingrediente"
             android:textColor="@color/mc_accent"
             android:backgroundTint="@color/mc_surface" />
@@ -84,34 +78,32 @@
         <Button
             android:id="@+id/btn_crear_ingrediente"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_sm"
             android:text="Crear ingrediente nuevo"
             android:textColor="@color/mc_accent"
             android:backgroundTint="@color/mc_surface" />
 
-        <!-- Borrar (solo en editar) -->
         <Button
             android:id="@+id/btn_borrar_comida"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_lg"
             android:text="Eliminar comida"
             android:textColor="@color/mc_accent_ink"
             android:backgroundTint="@color/mc_danger"
             android:visibility="gone" />
 
-        <!-- Cancelar / Guardar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="24dp">
+            android:layout_marginTop="@dimen/space_xl">
 
             <Button
                 android:id="@+id/btn_cancelar_comida"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/touch_height"
                 android:layout_weight="1"
                 android:text="Cancelar"
                 android:textColor="@color/mc_ink"
@@ -120,9 +112,9 @@
             <Button
                 android:id="@+id/btn_guardar_comida"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/touch_height"
                 android:layout_weight="1"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="@dimen/space_md"
                 android:text="Guardar"
                 android:textColor="@color/mc_accent_ink"
                 android:backgroundTint="@color/mc_accent" />

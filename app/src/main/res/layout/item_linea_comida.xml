@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingVertical="8dp">
+    android:paddingVertical="@dimen/space_sm">
 
     <TextView
         android:id="@+id/tv_linea_ingrediente"
@@ -12,15 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/mc_ink"
-        android:textSize="15sp" />
+        android:textSize="@dimen/text_body" />
 
     <TextView
         android:id="@+id/btn_quitar_linea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="@dimen/space_sm"
         android:text="Quitar"
         android:textColor="@color/mc_danger"
-        android:textSize="14sp" />
+        android:textSize="@dimen/text_action" />
 
 </LinearLayout>

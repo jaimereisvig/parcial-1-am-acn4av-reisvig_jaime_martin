@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="@dimen/dialog_padding">
 
     <EditText
         android:id="@+id/et_cantidad_dialog"
@@ -15,8 +15,8 @@
         android:id="@+id/cb_a_gusto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:minHeight="48dp"
+        android:layout_marginTop="@dimen/space_md"
+        android:minHeight="@dimen/touch_height"
         android:text="A gusto (sin cantidad)" />
 
 </LinearLayout>

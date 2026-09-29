@@ -8,33 +8,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/space_lg">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Comidas"
             android:textColor="@color/mc_ink"
-            android:textSize="22sp"
+            android:textSize="@dimen/text_title_screen"
             android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="@dimen/space_md" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_comidas"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingTop="4dp"
+            android:paddingTop="@dimen/space_xs"
             android:clipToPadding="false" />
 
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/fab_nuevo_comida"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/space_lg"
         android:background="@drawable/bg_fab"
         android:src="@drawable/ic_add"
         android:scaleType="center"
