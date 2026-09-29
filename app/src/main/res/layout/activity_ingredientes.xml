@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ingredientes"
+            android:text="@string/screen_ingredientes"
             android:textColor="@color/mc_ink"
             android:textSize="@dimen/text_title_screen"
             android:textStyle="bold"
@@ -23,7 +23,7 @@
             android:id="@+id/et_buscar"
             style="@style/McInput"
             android:inputType="text"
-            android:hint="Buscar ingrediente" />
+            android:hint="@string/hint_buscar_ingrediente" />
 
         <Spinner
             android:id="@+id/sp_filtro_gondola"
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="No hay ingredientes que coincidan"
+                android:text="@string/ingredientes_vacio"
                 android:textColor="@color/mc_muted"
                 android:textSize="@dimen/text_body"
                 android:visibility="gone" />
@@ -66,6 +66,6 @@
         android:background="@drawable/bg_fab"
         android:src="@drawable/ic_add"
         android:scaleType="center"
-        android:contentDescription="Nuevo ingrediente" />
+        android:contentDescription="@string/ingrediente_nuevo" />
 
 </FrameLayout>

@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/space_sm"
-        android:text="Quitar"
+        android:text="@string/accion_quitar"
         android:textColor="@color/mc_danger"
         android:textSize="@dimen/text_action" />
 

@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Comidas"
+            android:text="@string/screen_comidas"
             android:textColor="@color/mc_ink"
             android:textSize="@dimen/text_title_screen"
             android:textStyle="bold"
@@ -38,6 +38,6 @@
         android:background="@drawable/bg_fab"
         android:src="@drawable/ic_add"
         android:scaleType="center"
-        android:contentDescription="Nueva comida" />
+        android:contentDescription="@string/comida_nueva" />
 
 </FrameLayout>

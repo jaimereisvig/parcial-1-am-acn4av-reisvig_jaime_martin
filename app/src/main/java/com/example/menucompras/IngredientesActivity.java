@@ -88,7 +88,7 @@ public class IngredientesActivity extends AppCompatActivity {
     private ArrayAdapter<String> adaptadorFiltro() {
         Categoria[] valores = Categoria.values();
         String[] opciones = new String[valores.length + 1];
-        opciones[0] = "Todas";
+        opciones[0] = getString(R.string.filtro_todas);
         for (int i = 0; i < valores.length; i++) {
             opciones[i + 1] = valores[i].getEtiqueta();
         }

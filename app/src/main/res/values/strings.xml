@@ -1,3 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">MenuCompras</string>
+
+    <!-- Acciones comunes -->
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_accept">Aceptar</string>
+    <string name="action_add">Agregar</string>
+    <string name="action_use_existing">Usar existente</string>
+    <string name="action_got_it">Entendido</string>
+    <string name="cd_ver_detalle">Ver detalle</string>
+
+    <!-- Errores / validaciones comunes -->
+    <string name="error_nombre_requerido">Ingresá un nombre</string>
+    <string name="error_mayor_cero">Debe ser mayor a 0</string>
+
+    <!-- Home -->
+    <string name="home_hero_titulo">Del menú al changuito, sin vueltas</string>
+    <string name="home_hero_subtitulo">Planificás la semana y la lista se arma sola, ordenada por góndola.</string>
+    <string name="home_armar_menu">Armar el menú de la semana</string>
+    <string name="home_como_funciona">¿Cómo funciona?</string>
+    <string name="home_como_funciona_msg">1) Cargás tus ingredientes.\n2) Armás comidas con esos ingredientes.\n3) Planificás el menú de la semana.\n4) La app arma la lista de compras, ordenada por góndola.</string>
+    <string name="home_hero_desc">Ilustración de un carrito de compras</string>
+    <string name="toast_menus_proximamente">Menús: próxima iteración</string>
+
+    <!-- Navegación / títulos de pantalla -->
+    <string name="screen_ingredientes">Ingredientes</string>
+    <string name="screen_comidas">Comidas</string>
+    <string name="nav_menus">Menús</string>
+
+    <!-- Ingredientes: lista -->
+    <string name="hint_buscar_ingrediente">Buscar ingrediente</string>
+    <string name="ingredientes_vacio">No hay ingredientes que coincidan</string>
+    <string name="filtro_todas">Todas</string>
+    <string name="ingrediente_en_uso">en uso · %1$d</string>
+
+    <!-- Ingredientes: alta / edición -->
+    <string name="ingrediente_nuevo">Nuevo ingrediente</string>
+    <string name="ingrediente_editar">Editar ingrediente</string>
+    <string name="label_nombre">Nombre</string>
+    <string name="hint_nombre_ingrediente">Ej. Tomate perita</string>
+    <string name="label_gondola">Categoría / góndola</string>
+    <string name="label_tipo_medida">Tipo de medida</string>
+    <string name="label_presentacion_cantidad">Presentación (cantidad)</string>
+    <string name="hint_presentacion_cantidad">Ej. 1000</string>
+    <string name="label_nombre_presentacion">Nombre de la presentación (opcional)</string>
+    <string name="hint_nombre_presentacion">Ej. paquete</string>
+    <string name="label_nombre_unidad">Nombre de la unidad (opcional)</string>
+    <string name="hint_nombre_unidad">Ej. g</string>
+    <string name="ingrediente_eliminar">Eliminar ingrediente</string>
+    <string name="ingrediente_en_uso_form">En uso en %1$d comida(s). No se puede eliminar mientras esté en uso.</string>
+    <string name="ingrediente_sin_uso">Sin uso en comidas.</string>
+    <string name="error_ingrediente_duplicado">Ya existe un ingrediente con ese nombre</string>
+    <string name="error_cantidad_invalida">Ingresá una cantidad válida</string>
+    <string name="error_cantidad_mayor_cero">La cantidad debe ser mayor a 0</string>
+    <string name="toast_ingrediente_en_uso">No se puede eliminar: está en uso</string>
+    <string name="dialog_usar_existente_titulo">Ya existe</string>
+    <string name="dialog_usar_existente_msg">Ya existe \"%1$s\". ¿Querés usar el existente?</string>
+
+    <!-- Comidas: lista -->
+    <string name="comida_rinde">rinde %1$d · %2$d ingr.</string>
+
+    <!-- Comidas: alta / edición -->
+    <string name="comida_nueva">Nueva comida</string>
+    <string name="comida_editar">Editar comida</string>
+    <string name="hint_nombre_comida">Ej. Milanesas con puré</string>
+    <string name="label_comensales">Cantidad de comensales</string>
+    <string name="hint_comensales">Ej. 4</string>
+    <string name="label_tipo">Tipo</string>
+    <string name="label_categoria">Categoría</string>
+    <string name="label_preparacion">Preparación (opcional)</string>
+    <string name="hint_preparacion">Paso a paso de la receta</string>
+    <string name="label_ingredientes">Ingredientes</string>
+    <string name="comida_agregar_ingrediente">Agregar ingrediente</string>
+    <string name="comida_crear_ingrediente">Crear ingrediente nuevo</string>
+    <string name="comida_eliminar">Eliminar comida</string>
+    <string name="error_comida_duplicada">Ya existe una comida con ese nombre</string>
+    <string name="error_comensales_invalido">Ingresá un número válido</string>
+    <string name="toast_sin_ingredientes">No hay más ingredientes para agregar</string>
+    <string name="dialog_elegir_ingrediente_titulo">Elegir ingrediente</string>
+    <string name="error_cantidad_requerida">Ingresá una cantidad</string>
+    <string name="dialog_ya_en_comida_titulo">Ya está en la comida</string>
+    <string name="dialog_ya_en_comida_msg">\"%1$s\" ya está en esta comida.</string>
+
+    <!-- Eliminar (compartido comida / ingrediente) -->
+    <string name="dialog_eliminar_msg">¿Eliminar \"%1$s\"? Esta acción no se puede deshacer.</string>
+
+    <!-- Diálogo de cantidad -->
+    <string name="hint_cantidad">Cantidad (en unidad base)</string>
+    <string name="cb_a_gusto">A gusto (sin cantidad)</string>
+
+    <!-- Líneas de ingrediente en la comida -->
+    <string name="accion_quitar">Quitar</string>
+    <string name="linea_a_gusto">%1$s — a gusto</string>
+    <string name="linea_cantidad">%1$s — %2$s %3$s</string>
+    <string name="linea_ingrediente_eliminado">(ingrediente eliminado)</string>
+
 </resources>

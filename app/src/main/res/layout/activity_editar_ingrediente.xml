@@ -18,49 +18,49 @@
             android:textSize="@dimen/text_title_screen"
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/space_lg"
-            android:text="Nuevo ingrediente" />
+            android:text="@string/ingrediente_nuevo" />
 
-        <TextView style="@style/McLabel" android:text="Nombre" />
+        <TextView style="@style/McLabel" android:text="@string/label_nombre" />
         <EditText
             android:id="@+id/et_nombre"
             style="@style/McInput"
             android:inputType="textCapSentences"
-            android:hint="Ej. Tomate perita" />
+            android:hint="@string/hint_nombre_ingrediente" />
 
-        <TextView style="@style/McLabel" android:text="Categoría / góndola" />
+        <TextView style="@style/McLabel" android:text="@string/label_gondola" />
         <Spinner
             android:id="@+id/sp_gondola"
             android:layout_width="match_parent"
             android:layout_height="@dimen/touch_height"
             android:layout_marginTop="@dimen/space_xs" />
 
-        <TextView style="@style/McLabel" android:text="Tipo de medida" />
+        <TextView style="@style/McLabel" android:text="@string/label_tipo_medida" />
         <Spinner
             android:id="@+id/sp_tipo_medida"
             android:layout_width="match_parent"
             android:layout_height="@dimen/touch_height"
             android:layout_marginTop="@dimen/space_xs" />
 
-        <TextView style="@style/McLabel" android:text="Presentación (cantidad)" />
+        <TextView style="@style/McLabel" android:text="@string/label_presentacion_cantidad" />
         <EditText
             android:id="@+id/et_presentacion_cantidad"
             style="@style/McInput"
             android:inputType="numberDecimal"
-            android:hint="Ej. 1000" />
+            android:hint="@string/hint_presentacion_cantidad" />
 
-        <TextView style="@style/McLabel" android:text="Nombre de la presentación (opcional)" />
+        <TextView style="@style/McLabel" android:text="@string/label_nombre_presentacion" />
         <EditText
             android:id="@+id/et_nombre_presentacion"
             style="@style/McInput"
             android:inputType="text"
-            android:hint="Ej. paquete" />
+            android:hint="@string/hint_nombre_presentacion" />
 
-        <TextView style="@style/McLabel" android:text="Nombre de la unidad (opcional)" />
+        <TextView style="@style/McLabel" android:text="@string/label_nombre_unidad" />
         <EditText
             android:id="@+id/et_nombre_unidad"
             style="@style/McInput"
             android:inputType="text"
-            android:hint="Ej. g" />
+            android:hint="@string/hint_nombre_unidad" />
 
         <TextView
             android:id="@+id/tv_en_uso_form"
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/touch_height"
             android:layout_marginTop="@dimen/space_md"
-            android:text="Eliminar ingrediente"
+            android:text="@string/ingrediente_eliminar"
             android:textColor="@color/mc_accent_ink"
             android:backgroundTint="@color/mc_danger"
             android:visibility="gone" />
@@ -92,7 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/touch_height"
                 android:layout_weight="1"
-                android:text="Cancelar"
+                android:text="@string/action_cancel"
                 android:textColor="@color/mc_ink"
                 android:backgroundTint="@color/mc_band" />
 
@@ -102,7 +102,7 @@
                 android:layout_height="@dimen/touch_height"
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/space_md"
-                android:text="Guardar"
+                android:text="@string/action_save"
                 android:textColor="@color/mc_accent_ink"
                 android:backgroundTint="@color/mc_accent" />
 

@@ -115,7 +115,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
     }
 
     private void configurarModoAlta() {
-        tvTitulo.setText("Nuevo ingrediente");
+        tvTitulo.setText(getString(R.string.ingrediente_nuevo));
         tvEnUso.setVisibility(View.GONE);
         btnBorrar.setVisibility(View.GONE);
     }
@@ -124,7 +124,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         Ingrediente ing = repo.buscarPorId(idEnEdicion);
         if (ing == null) { finish(); return; }
 
-        tvTitulo.setText("Editar ingrediente");
+        tvTitulo.setText(getString(R.string.ingrediente_editar));
         etNombre.setText(ing.getNombre());
         spGondola.setSelection(ing.getCategoria().ordinal());
         spTipoMedida.setSelection(ing.getTipoMedida().ordinal());
@@ -136,10 +136,10 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         btnBorrar.setVisibility(View.VISIBLE);
         int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId());
         if (enUso > 0) {
-            tvEnUso.setText("En uso en " + enUso + " comida(s). No se puede eliminar mientras esté en uso.");
+            tvEnUso.setText(getString(R.string.ingrediente_en_uso_form, enUso));
             btnBorrar.setEnabled(false);
         } else {
-            tvEnUso.setText("Sin uso en comidas.");
+            tvEnUso.setText(getString(R.string.ingrediente_sin_uso));
             btnBorrar.setEnabled(true);
         }
     }
@@ -151,7 +151,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         }
         String nombre = etNombre.getText().toString().trim();
         if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
-            etNombre.setError("Ya existe un ingrediente con ese nombre");
+            etNombre.setError(getString(R.string.error_ingrediente_duplicado));
         } else {
             etNombre.setError(null);
         }
@@ -160,7 +160,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
     private void guardar() {
         String nombre = etNombre.getText().toString().trim();
         if (nombre.isEmpty()) {
-            etNombre.setError("Ingresá un nombre");
+            etNombre.setError(getString(R.string.error_nombre_requerido));
             etNombre.requestFocus();
             return;
         }
@@ -168,7 +168,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
             if (idEnEdicion == 0 && enContexto) {
                 mostrarDialogoUsarExistente(nombre);
             } else {
-                etNombre.setError("Ya existe un ingrediente con ese nombre");
+                etNombre.setError(getString(R.string.error_ingrediente_duplicado));
                 etNombre.requestFocus();
             }
             return;
@@ -178,12 +178,12 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         try {
             cantidad = Double.parseDouble(etPresentacionCantidad.getText().toString().trim());
         } catch (NumberFormatException e) {
-            etPresentacionCantidad.setError("Ingresá una cantidad válida");
+            etPresentacionCantidad.setError(getString(R.string.error_cantidad_invalida));
             etPresentacionCantidad.requestFocus();
             return;
         }
         if (cantidad <= 0) {
-            etPresentacionCantidad.setError("La cantidad debe ser mayor a 0");
+            etPresentacionCantidad.setError(getString(R.string.error_cantidad_mayor_cero));
             etPresentacionCantidad.requestFocus();
             return;
         }
@@ -213,9 +213,9 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         if (existente == null) return;
         dialogoDuplicadoVisible = true;
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Ya existe")
-                .setMessage("Ya existe \"" + existente.getNombre() + "\". ¿Querés usar el existente?")
-                .setPositiveButton("Usar existente", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.dialog_usar_existente_titulo))
+                .setMessage(getString(R.string.dialog_usar_existente_msg, existente.getNombre()))
+                .setPositiveButton(getString(R.string.action_use_existing), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface d, int which) {
                         Intent datos = new Intent();
                         datos.putExtra(EXTRA_ID_CREADO, existente.getId());
@@ -223,7 +223,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
                         finish();
                     }
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .create();
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override public void onDismiss(DialogInterface d) { dialogoDuplicadoVisible = false; }
@@ -236,19 +236,19 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         if (ing == null) { finish(); return; }
         int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId());
         if (enUso > 0) {
-            Toast.makeText(this, "No se puede eliminar: está en uso", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_ingrediente_en_uso), Toast.LENGTH_SHORT).show();
             return;
         }
         new AlertDialog.Builder(this)
-                .setTitle("Eliminar ingrediente")
-                .setMessage("¿Eliminar \"" + ing.getNombre() + "\"? Esta acción no se puede deshacer.")
-                .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.ingrediente_eliminar))
+                .setMessage(getString(R.string.dialog_eliminar_msg, ing.getNombre()))
+                .setPositiveButton(getString(R.string.action_delete), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         repo.eliminar(idEnEdicion);
                         finish();
                     }
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .show();
     }
 }

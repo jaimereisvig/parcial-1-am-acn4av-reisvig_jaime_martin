@@ -9,7 +9,7 @@
         android:id="@+id/et_cantidad_dialog"
         style="@style/McInput"
         android:inputType="numberDecimal"
-        android:hint="Cantidad (en unidad base)" />
+        android:hint="@string/hint_cantidad" />
 
     <CheckBox
         android:id="@+id/cb_a_gusto"
@@ -17,6 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_md"
         android:minHeight="@dimen/touch_height"
-        android:text="A gusto (sin cantidad)" />
+        android:text="@string/cb_a_gusto" />
 
 </LinearLayout>

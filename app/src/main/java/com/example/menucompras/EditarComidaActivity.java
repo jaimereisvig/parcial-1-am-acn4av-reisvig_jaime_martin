@@ -141,7 +141,7 @@ public class EditarComidaActivity extends AppCompatActivity {
 
     // ---------- Modos ----------
     private void configurarModoAlta() {
-        tvTitulo.setText("Nueva comida");
+        tvTitulo.setText(getString(R.string.comida_nueva));
         btnBorrar.setVisibility(View.GONE);
         spCategoria.setSelection(CategoriaComida.VARIOS.ordinal());
         lineasActuales = new ArrayList<>();
@@ -150,7 +150,7 @@ public class EditarComidaActivity extends AppCompatActivity {
     private void configurarModoEdicion() {
         Comida c = repo.buscarPorId(idEnEdicion);
         if (c == null) { finish(); return; }
-        tvTitulo.setText("Editar comida");
+        tvTitulo.setText(getString(R.string.comida_editar));
         etNombre.setText(c.getNombre());
         etComensales.setText(String.valueOf(c.getComensalesBase()));
         spTipo.setSelection(c.getTipo().ordinal());
@@ -182,12 +182,12 @@ public class EditarComidaActivity extends AppCompatActivity {
 
     private String textoLinea(LineaDeComida linea) {
         Ingrediente ing = repoIng.buscarPorId(linea.getIngredienteId());
-        String nombre = (ing != null) ? ing.getNombre() : "(ingrediente eliminado)";
+        String nombre = (ing != null) ? ing.getNombre() : getString(R.string.linea_ingrediente_eliminado);
         if (linea.isAGusto()) {
-            return nombre + " — a gusto";
+            return getString(R.string.linea_a_gusto, nombre);
         }
         String unidad = (ing != null) ? ing.getTipoMedida().getUnidadBase() : "";
-        return nombre + " — " + formatCantidad(linea.getCantidad()) + " " + unidad;
+        return getString(R.string.linea_cantidad, nombre, formatCantidad(linea.getCantidad()), unidad);
     }
 
     private String formatCantidad(double c) {
@@ -207,9 +207,9 @@ public class EditarComidaActivity extends AppCompatActivity {
         if (ing == null) return;
         if (yaAgregado(ingredienteId)) {
             new AlertDialog.Builder(this)
-                    .setTitle("Ya está en la comida")
-                    .setMessage("\"" + ing.getNombre() + "\" ya está en esta comida.")
-                    .setPositiveButton("Aceptar", null)
+                    .setTitle(getString(R.string.dialog_ya_en_comida_titulo))
+                    .setMessage(getString(R.string.dialog_ya_en_comida_msg, ing.getNombre()))
+                    .setPositiveButton(getString(R.string.action_accept), null)
                     .show();
             return;
         }
@@ -222,20 +222,20 @@ public class EditarComidaActivity extends AppCompatActivity {
             if (!yaAgregado(ing.getId())) disponibles.add(ing);
         }
         if (disponibles.isEmpty()) {
-            Toast.makeText(this, "No hay más ingredientes para agregar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_sin_ingredientes), Toast.LENGTH_SHORT).show();
             return;
         }
         String[] nombres = new String[disponibles.size()];
         for (int i = 0; i < disponibles.size(); i++) nombres[i] = disponibles.get(i).getNombre();
 
         new AlertDialog.Builder(this)
-                .setTitle("Elegir ingrediente")
+                .setTitle(getString(R.string.dialog_elegir_ingrediente_titulo))
                 .setItems(nombres, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         mostrarDialogoCantidad(disponibles.get(which));
                     }
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .show();
     }
 
@@ -254,8 +254,8 @@ public class EditarComidaActivity extends AppCompatActivity {
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(ing.getNombre())
                 .setView(vista)
-                .setPositiveButton("Agregar", null)
-                .setNegativeButton("Cancelar", null)
+                .setPositiveButton(getString(R.string.action_add), null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .create();
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -269,11 +269,11 @@ public class EditarComidaActivity extends AppCompatActivity {
                             try {
                                 cantidad = Double.parseDouble(etCantidad.getText().toString().trim());
                             } catch (NumberFormatException e) {
-                                etCantidad.setError("Ingresá una cantidad");
+                                etCantidad.setError(getString(R.string.error_cantidad_requerida));
                                 return;
                             }
                             if (cantidad <= 0) {
-                                etCantidad.setError("Debe ser mayor a 0");
+                                etCantidad.setError(getString(R.string.error_mayor_cero));
                                 return;
                             }
                         }
@@ -291,7 +291,7 @@ public class EditarComidaActivity extends AppCompatActivity {
     private void validarNombreDuplicado() {
         String nombre = etNombre.getText().toString().trim();
         if (!nombre.isEmpty() && repo.existeNombre(nombre, idEnEdicion)) {
-            etNombre.setError("Ya existe una comida con ese nombre");
+            etNombre.setError(getString(R.string.error_comida_duplicada));
         } else {
             etNombre.setError(null);
         }
@@ -300,12 +300,12 @@ public class EditarComidaActivity extends AppCompatActivity {
     private void guardar() {
         String nombre = etNombre.getText().toString().trim();
         if (nombre.isEmpty()) {
-            etNombre.setError("Ingresá un nombre");
+            etNombre.setError(getString(R.string.error_nombre_requerido));
             etNombre.requestFocus();
             return;
         }
         if (repo.existeNombre(nombre, idEnEdicion)) {
-            etNombre.setError("Ya existe una comida con ese nombre");
+            etNombre.setError(getString(R.string.error_comida_duplicada));
             etNombre.requestFocus();
             return;
         }
@@ -314,12 +314,12 @@ public class EditarComidaActivity extends AppCompatActivity {
         try {
             comensales = Integer.parseInt(etComensales.getText().toString().trim());
         } catch (NumberFormatException e) {
-            etComensales.setError("Ingresá un número válido");
+            etComensales.setError(getString(R.string.error_comensales_invalido));
             etComensales.requestFocus();
             return;
         }
         if (comensales <= 0) {
-            etComensales.setError("Debe ser mayor a 0");
+            etComensales.setError(getString(R.string.error_mayor_cero));
             etComensales.requestFocus();
             return;
         }
@@ -340,15 +340,15 @@ public class EditarComidaActivity extends AppCompatActivity {
         Comida c = repo.buscarPorId(idEnEdicion);
         if (c == null) { finish(); return; }
         new AlertDialog.Builder(this)
-                .setTitle("Eliminar comida")
-                .setMessage("¿Eliminar \"" + c.getNombre() + "\"? Esta acción no se puede deshacer.")
-                .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.comida_eliminar))
+                .setMessage(getString(R.string.dialog_eliminar_msg, c.getNombre()))
+                .setPositiveButton(getString(R.string.action_delete), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         repo.eliminar(idEnEdicion);
                         finish();
                     }
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .show();
     }
 }

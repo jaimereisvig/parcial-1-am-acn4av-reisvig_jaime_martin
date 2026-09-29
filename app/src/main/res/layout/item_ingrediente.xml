@@ -55,7 +55,7 @@
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:src="@drawable/ic_chevron"
-        android:contentDescription="Ver detalle"
+        android:contentDescription="@string/cd_ver_detalle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

@@ -50,17 +50,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void proximamente() {
-        Toast.makeText(this, "Menús: próxima iteración", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.toast_menus_proximamente), Toast.LENGTH_SHORT).show();
     }
 
     private void mostrarComoFunciona() {
         new AlertDialog.Builder(this)
-                .setTitle("¿Cómo funciona?")
-                .setMessage("1) Cargás tus ingredientes.\n" +
-                        "2) Armás comidas con esos ingredientes.\n" +
-                        "3) Planificás el menú de la semana.\n" +
-                        "4) La app arma la lista de compras, ordenada por góndola.")
-                .setPositiveButton("Entendido", null)
+                .setTitle(getString(R.string.home_como_funciona))
+                .setMessage(getString(R.string.home_como_funciona_msg))
+                .setPositiveButton(getString(R.string.action_got_it), null)
                 .show();
     }
 }
