@@ -48,8 +48,8 @@ public class ComidaAdapter extends RecyclerView.Adapter<ComidaAdapter.ComidaView
         holder.tvNombre.setText(comida.getNombre());
         holder.tvCategoria.setText(comida.getCategoria().getEtiqueta());
         int nIngr = comida.getLineas().size();
-        holder.tvRinde.setText("rinde " + comida.getComensalesBase() + " · " + nIngr + " ingr.");
-
+        holder.tvRinde.setText(holder.itemView.getContext()
+                .getString(R.string.comida_rinde, comida.getComensalesBase(), nIngr));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
