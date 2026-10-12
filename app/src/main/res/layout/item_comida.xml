@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
     android:background="@drawable/bg_card"
     android:padding="@dimen/space_lg"
     android:layout_marginBottom="@dimen/space_md">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_nombre_comida"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:textColor="@color/mc_ink"
+        android:textSize="@dimen/text_title_item"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_chevron_comida"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        tools:text="Milanesas con puré" />
+
+    <LinearLayout
+        android:id="@+id/row_chips_comida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/space_sm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_nombre_comida">
 
         <TextView
-            android:id="@+id/tv_nombre_comida"
+            android:id="@+id/tv_categoria_comida"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/mc_ink"
-            android:textSize="@dimen/text_title_item"
-            android:textStyle="bold"
-            tools:text="Milanesas con puré" />
+            android:background="@drawable/bg_chip_neutral"
+            android:paddingHorizontal="@dimen/chip_padding_h"
+            android:paddingVertical="@dimen/space_xs"
+            android:textColor="@color/mc_muted"
+            android:textSize="@dimen/text_chip"
+            tools:text="Carnes Rojas" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_rinde"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/space_sm">
+            android:layout_marginStart="@dimen/space_sm"
+            android:background="@drawable/bg_chip_accent"
+            android:paddingHorizontal="@dimen/chip_padding_h"
+            android:paddingVertical="@dimen/space_xs"
+            android:textColor="@color/mc_accent"
+            android:textSize="@dimen/text_chip"
+            tools:text="rinde 4" />
 
-            <TextView
-                android:id="@+id/tv_categoria_comida"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_neutral"
-                android:paddingHorizontal="@dimen/chip_padding_h"
-                android:paddingVertical="@dimen/space_xs"
-                android:textColor="@color/mc_muted"
-                android:textSize="@dimen/text_chip"
-                tools:text="Carnes Rojas" />
-
-            <TextView
-                android:id="@+id/tv_rinde"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_sm"
-                android:background="@drawable/bg_chip_accent"
-                android:paddingHorizontal="@dimen/chip_padding_h"
-                android:paddingVertical="@dimen/space_xs"
-                android:textColor="@color/mc_accent"
-                android:textSize="@dimen/text_chip"
-                tools:text="rinde 4" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <ImageView
@@ -61,6 +61,9 @@
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:src="@drawable/ic_chevron"
-        android:contentDescription="@string/cd_ver_detalle" />
+        android:contentDescription="@string/cd_ver_detalle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
