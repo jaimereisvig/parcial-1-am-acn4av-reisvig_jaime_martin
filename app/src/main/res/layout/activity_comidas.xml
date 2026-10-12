@@ -19,13 +19,42 @@
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/space_md" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_comidas"
+        <EditText
+            android:id="@+id/et_buscar_comida"
+            style="@style/McInput"
+            android:inputType="text"
+            android:hint="@string/hint_buscar_comida" />
+
+        <Spinner
+            android:id="@+id/sp_filtro_categoria_comida"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_sm" />
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingTop="@dimen/space_xs"
-            android:clipToPadding="false" />
+            android:layout_marginTop="@dimen/space_md">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_comidas"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/space_xs"
+                android:clipToPadding="false" />
+
+            <TextView
+                android:id="@+id/tv_vacio_comida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/comidas_vacio"
+                android:textColor="@color/mc_muted"
+                android:textSize="@dimen/text_body"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

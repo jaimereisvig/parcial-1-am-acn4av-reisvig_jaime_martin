@@ -84,6 +84,8 @@
     <string name="error_cantidad_requerida">Ingresá una cantidad</string>
     <string name="dialog_ya_en_comida_titulo">Ya está en la comida</string>
     <string name="dialog_ya_en_comida_msg">\"%1$s\" ya está en esta comida.</string>
+    <string name="hint_buscar_comida">Buscar comida</string>
+    <string name="comidas_vacio">No hay comidas que coincidan</string>
 
     <!-- Eliminar (compartido comida / ingrediente) -->
     <string name="dialog_eliminar_msg">¿Eliminar \"%1$s\"? Esta acción no se puede deshacer.</string>
