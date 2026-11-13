@@ -35,7 +35,7 @@ public class IngredientesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredientes);
 
-        repo = RepositorioIngredientes.getInstancia();
+        repo = RepositorioIngredientes.getInstancia(this);
 
         etBuscar = findViewById(R.id.et_buscar);
         spFiltroGondola = findViewById(R.id.sp_filtro_gondola);

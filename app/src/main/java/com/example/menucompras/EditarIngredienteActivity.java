@@ -41,7 +41,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_ingrediente);
 
-        repo = RepositorioIngredientes.getInstancia();
+        repo = RepositorioIngredientes.getInstancia(this);
 
         tvTitulo = findViewById(R.id.tv_titulo_form);
         etNombre = findViewById(R.id.et_nombre);
@@ -197,8 +197,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
             repo.actualizar(new Ingrediente(idEnEdicion, nombre, tipoMedida, cantidad,
                     nombrePresentacion, nombreUnidad, categoria));
         } else {
-            int nuevoId = repo.nuevoId();
-            repo.agregar(new Ingrediente(nuevoId, nombre, tipoMedida, cantidad,
+            int nuevoId = repo.agregar(new Ingrediente(0, nombre, tipoMedida, cantidad,
                     nombrePresentacion, nombreUnidad, categoria));
             Intent datos = new Intent();
             datos.putExtra(EXTRA_ID_CREADO, nuevoId);

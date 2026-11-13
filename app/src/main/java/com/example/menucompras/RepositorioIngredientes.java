@@ -1,7 +1,14 @@
 package com.example.menucompras;
 
-import com.example.menucompras.modelo.DatosEjemplo;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.menucompras.modelo.Categoria;
 import com.example.menucompras.modelo.Ingrediente;
+import com.example.menucompras.modelo.TipoMedida;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,78 +16,119 @@ import java.util.List;
 public class RepositorioIngredientes {
 
     private static RepositorioIngredientes instancia;
+    private final MenuComprasDBHelper dbHelper;
 
-    private final List<Ingrediente> ingredientes;
-    private int siguienteId;
-
-    private RepositorioIngredientes() {
-        ingredientes = new ArrayList<>(DatosEjemplo.getIngredientes());
-        int max = 0;
-        for (Ingrediente ing : ingredientes) {
-            if (ing.getId() > max) max = ing.getId();
-        }
-        siguienteId = max + 1;
+    private RepositorioIngredientes(Context context) {
+        dbHelper = MenuComprasDBHelper.getInstancia(context);
     }
 
-    public static RepositorioIngredientes getInstancia() {
+    public static synchronized RepositorioIngredientes getInstancia(Context context) {
         if (instancia == null) {
-            instancia = new RepositorioIngredientes();
+            instancia = new RepositorioIngredientes(context);
         }
         return instancia;
     }
 
+    // Arma un Ingrediente desde la fila actual del cursor.
+    private Ingrediente desde(Cursor c) {
+        int id = c.getInt(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_ID));
+        String nombre = c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_NOMBRE));
+        TipoMedida tipoMedida = TipoMedida.valueOf(
+                c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_TIPO_MEDIDA)));
+        double presCant = c.getDouble(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_PRES_CANT));
+        String nombrePres = c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_NOMBRE_PRES));
+        String nombreUnidad = c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_NOMBRE_UNIDAD));
+        Categoria categoria = Categoria.valueOf(
+                c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_CATEGORIA)));
+        return new Ingrediente(id, nombre, tipoMedida, presCant, nombrePres, nombreUnidad, categoria);
+    }
+
+    // Vuelca un Ingrediente a ContentValues (sin el id: lo maneja la BD).
+    private ContentValues valores(Ingrediente ing) {
+        ContentValues cv = new ContentValues();
+        cv.put(MenuComprasDBHelper.ING_NOMBRE, ing.getNombre());
+        cv.put(MenuComprasDBHelper.ING_TIPO_MEDIDA, ing.getTipoMedida().name());
+        cv.put(MenuComprasDBHelper.ING_PRES_CANT, ing.getPresentacionCantidad());
+        cv.put(MenuComprasDBHelper.ING_NOMBRE_PRES, ing.getNombrePresentacion());
+        cv.put(MenuComprasDBHelper.ING_NOMBRE_UNIDAD, ing.getNombreUnidad());
+        cv.put(MenuComprasDBHelper.ING_CATEGORIA, ing.getCategoria().name());
+        return cv;
+    }
+
     public List<Ingrediente> getTodos() {
-        return ingredientes;
+        List<Ingrediente> lista = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(MenuComprasDBHelper.T_ING, null, null, null, null, null,
+                MenuComprasDBHelper.ING_ID + " ASC");
+        try {
+            while (c.moveToNext()) lista.add(desde(c));
+        } finally {
+            c.close();
+        }
+        return lista;
     }
 
     public Ingrediente buscarPorId(int id) {
-        for (Ingrediente ing : ingredientes) {
-            if (ing.getId() == id) return ing;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(MenuComprasDBHelper.T_ING, null,
+                MenuComprasDBHelper.ING_ID + " = ?", new String[]{String.valueOf(id)},
+                null, null, null);
+        try {
+            if (c.moveToNext()) return desde(c);
+            return null;
+        } finally {
+            c.close();
         }
-        return null;
     }
 
     public boolean existeNombre(String nombre, int excluyendoId) {
-        String buscado = nombre.trim();
-        for (Ingrediente ing : ingredientes) {
-            if (ing.getId() != excluyendoId && ing.getNombre().equalsIgnoreCase(buscado)) {
-                return true;
-            }
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(MenuComprasDBHelper.T_ING, new String[]{MenuComprasDBHelper.ING_ID},
+                MenuComprasDBHelper.ING_NOMBRE + " = ? COLLATE NOCASE AND "
+                        + MenuComprasDBHelper.ING_ID + " <> ?",
+                new String[]{nombre.trim(), String.valueOf(excluyendoId)},
+                null, null, null);
+        try {
+            return c.getCount() > 0;
+        } finally {
+            c.close();
         }
-        return false;
     }
 
     public Ingrediente buscarPorNombre(String nombre) {
-        String buscado = nombre.trim();
-        for (Ingrediente ing : ingredientes) {
-            if (ing.getNombre().equalsIgnoreCase(buscado)) return ing;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(MenuComprasDBHelper.T_ING, null,
+                MenuComprasDBHelper.ING_NOMBRE + " = ? COLLATE NOCASE",
+                new String[]{nombre.trim()}, null, null, null);
+        try {
+            if (c.moveToNext()) return desde(c);
+            return null;
+        } finally {
+            c.close();
         }
-        return null;
     }
 
-    public int nuevoId() {
-        return siguienteId++;
-    }
-
-    public void agregar(Ingrediente ing) {
-        ingredientes.add(ing);
+    // Inserta y devuelve el id que asigna la BD (AUTOINCREMENT).
+    public int agregar(Ingrediente ing) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long id = db.insertOrThrow(MenuComprasDBHelper.T_ING, null, valores(ing));
+        return (int) id;
     }
 
     public void actualizar(Ingrediente ing) {
-        for (int i = 0; i < ingredientes.size(); i++) {
-            if (ingredientes.get(i).getId() == ing.getId()) {
-                ingredientes.set(i, ing);
-                return;
-            }
-        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.update(MenuComprasDBHelper.T_ING, valores(ing),
+                MenuComprasDBHelper.ING_ID + " = ?", new String[]{String.valueOf(ing.getId())});
     }
 
     public void eliminar(int id) {
-        for (int i = 0; i < ingredientes.size(); i++) {
-            if (ingredientes.get(i).getId() == id) {
-                ingredientes.remove(i);
-                return;
-            }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            db.delete(MenuComprasDBHelper.T_ING, MenuComprasDBHelper.ING_ID + " = ?",
+                    new String[]{String.valueOf(id)});
+        } catch (SQLiteConstraintException e) {
+            // El ingrediente esta referenciado por alguna comida (FK RESTRICT): no se borra.
+            // La app ya bloquea este caso antes de llegar aca (chequeo de "en uso").
         }
     }
 }

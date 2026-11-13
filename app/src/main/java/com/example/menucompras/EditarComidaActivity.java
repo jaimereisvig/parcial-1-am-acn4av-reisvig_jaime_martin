@@ -65,7 +65,7 @@ public class EditarComidaActivity extends AppCompatActivity {
                 });
 
         repo = RepositorioComidas.getInstancia();
-        repoIng = RepositorioIngredientes.getInstancia();
+        repoIng = RepositorioIngredientes.getInstancia(this);
 
         tvTitulo = findViewById(R.id.tv_titulo_comida);
         etNombre = findViewById(R.id.et_nombre_comida);
