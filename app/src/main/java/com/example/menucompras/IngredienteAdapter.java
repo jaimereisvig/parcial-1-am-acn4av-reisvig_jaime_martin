@@ -49,7 +49,7 @@ public class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.
         holder.tvNombre.setText(ing.getNombre());
         holder.tvGondola.setText(ing.getCategoria().getEtiqueta());
 
-        int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId()); //mamita!!!
+        int enUso = RepositorioComidas.getInstancia(holder.itemView.getContext()).contarComidasQueUsan(ing.getId());
         if (enUso > 0) {
             holder.tvEnUso.setText(holder.itemView.getContext()
                     .getString(R.string.ingrediente_en_uso, enUso));

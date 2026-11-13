@@ -64,7 +64,7 @@ public class EditarComidaActivity extends AppCompatActivity {
                     }
                 });
 
-        repo = RepositorioComidas.getInstancia();
+        repo = RepositorioComidas.getInstancia(this);
         repoIng = RepositorioIngredientes.getInstancia(this);
 
         tvTitulo = findViewById(R.id.tv_titulo_comida);
@@ -331,7 +331,7 @@ public class EditarComidaActivity extends AppCompatActivity {
         if (idEnEdicion != 0) {
             repo.actualizar(new Comida(idEnEdicion, nombre, comensales, tipo, categoria, preparacion, lineasActuales));
         } else {
-            repo.agregar(new Comida(repo.nuevoId(), nombre, comensales, tipo, categoria, preparacion, lineasActuales));
+            repo.agregar(new Comida(0, nombre, comensales, tipo, categoria, preparacion, lineasActuales));
         }
         finish();
     }

@@ -134,7 +134,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
 
         tvEnUso.setVisibility(View.VISIBLE);
         btnBorrar.setVisibility(View.VISIBLE);
-        int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId());
+        int enUso = RepositorioComidas.getInstancia(this).contarComidasQueUsan(ing.getId());
         if (enUso > 0) {
             tvEnUso.setText(getString(R.string.ingrediente_en_uso_form, enUso));
             btnBorrar.setEnabled(false);
@@ -233,7 +233,7 @@ public class EditarIngredienteActivity extends AppCompatActivity {
     private void intentarBorrar() {
         Ingrediente ing = repo.buscarPorId(idEnEdicion);
         if (ing == null) { finish(); return; }
-        int enUso = RepositorioComidas.getInstancia().contarComidasQueUsan(ing.getId());
+        int enUso = RepositorioComidas.getInstancia(this).contarComidasQueUsan(ing.getId());
         if (enUso > 0) {
             Toast.makeText(this, getString(R.string.toast_ingrediente_en_uso), Toast.LENGTH_SHORT).show();
             return;

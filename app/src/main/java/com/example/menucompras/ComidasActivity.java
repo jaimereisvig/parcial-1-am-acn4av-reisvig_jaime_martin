@@ -35,7 +35,7 @@ public class ComidasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comidas);
 
-        repo = RepositorioComidas.getInstancia();
+        repo = RepositorioComidas.getInstancia(this);
 
         etBuscar = findViewById(R.id.et_buscar_comida);
         spFiltroCategoria = findViewById(R.id.sp_filtro_categoria_comida);
