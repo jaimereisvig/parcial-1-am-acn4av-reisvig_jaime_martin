@@ -100,4 +100,9 @@
     <string name="linea_cantidad">%1$s — %2$s %3$s</string>
     <string name="linea_ingrediente_eliminado">(ingrediente eliminado)</string>
 
+    <!-- Menú -->
+    <string name="screen_menu">Menú semanal</string>
+    <string name="menu_franja_vacia">Sin comidas</string>
+    <string name="menu_agregar">+ Agregar</string>
+
 </resources>

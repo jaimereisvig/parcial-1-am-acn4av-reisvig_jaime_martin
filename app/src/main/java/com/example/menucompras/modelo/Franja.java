@@ -2,10 +2,10 @@ package com.example.menucompras.modelo;
 
 public enum Franja {
     DESAYUNO("Desayuno"),
-    COLACION_MANANA("Colación mañana"),
+    COLACION_MANANA("Colación de mañana"),
     ALMUERZO("Almuerzo"),
     MERIENDA("Merienda"),
-    COLACION_TARDE("Colación tarde"),
+    COLACION_TARDE("Colación de tarde"),
     CENA("Cena");
 
     private final String etiqueta;

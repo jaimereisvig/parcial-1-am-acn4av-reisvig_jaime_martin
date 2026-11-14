@@ -28,6 +28,7 @@
         </activity>
         <activity android:name=".EditarIngredienteActivity" />
         <activity android:name=".EditarComidaActivity" />
+        <activity android:name=".MenuActivity" android:exported="false" />
     </application>
 
 </manifest>

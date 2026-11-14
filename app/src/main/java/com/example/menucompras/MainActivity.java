@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,26 +30,25 @@ public class MainActivity extends AppCompatActivity {
 
         btnIrComidas.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ComidasActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, ComidasActivity.class));
             }
         });
 
         btnArmarMenu.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { proximamente(); }
+            @Override public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MenuActivity.class));
+            }
         });
 
         btnIrMenus.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { proximamente(); }
+            @Override public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MenuActivity.class));
+            }
         });
 
         tvComoFunciona.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { mostrarComoFunciona(); }
         });
-    }
-
-    private void proximamente() {
-        Toast.makeText(this, getString(R.string.toast_menus_proximamente), Toast.LENGTH_SHORT).show();
     }
 
     private void mostrarComoFunciona() {
