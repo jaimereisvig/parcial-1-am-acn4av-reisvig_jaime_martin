@@ -108,4 +108,10 @@
     <string name="menu_sin_comidas">No hay más comidas para agregar</string>
     <string name="toast_comida_en_menu">No se puede eliminar: la comida está en el menú</string>
 
+    <!-- Lista de compras -->
+    <string name="screen_lista_compras">Lista de compras</string>
+    <string name="compras_chequear">Chequear</string>
+    <string name="compras_vacia">Armá el menú para generar la lista</string>
+    <string name="menu_ver_lista">Ver lista de compras</string>
+
 </resources>

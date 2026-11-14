@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +52,12 @@ public class MenuActivity extends AppCompatActivity {
                 renderFranjas();
             }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        findViewById(R.id.btn_ver_lista).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this, ListaComprasActivity.class));
+            }
         });
     }
 

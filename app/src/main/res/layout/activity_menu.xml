@@ -37,6 +37,13 @@
                 android:orientation="vertical" />
         </ScrollView>
 
+        <Button
+            android:id="@+id/btn_ver_lista"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_md"
+            android:text="@string/menu_ver_lista" />
+
     </LinearLayout>
 
 </FrameLayout>
