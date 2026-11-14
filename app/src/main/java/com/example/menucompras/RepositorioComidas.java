@@ -13,6 +13,8 @@ import com.example.menucompras.modelo.TipoComida;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.database.sqlite.SQLiteConstraintException;
+
 public class RepositorioComidas {
 
     private static RepositorioComidas instancia;
@@ -179,8 +181,13 @@ public class RepositorioComidas {
 
     public void eliminar(int id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(MenuComprasDBHelper.T_COM, MenuComprasDBHelper.COM_ID + " = ?",
-                new String[]{String.valueOf(id)});
-        // Las lineas de la comida caen por ON DELETE CASCADE.
+        try {
+            db.delete(MenuComprasDBHelper.T_COM, MenuComprasDBHelper.COM_ID + " = ?",
+                    new String[]{String.valueOf(id)});
+            // Las lineas de la comida caen por ON DELETE CASCADE.
+        } catch (SQLiteConstraintException e) {
+            // La comida esta usada en el menu (FK RESTRICT): no se borra.
+            // La app ya bloquea este caso antes (chequeo de "en uso en menus").
+        }
     }
 }

@@ -339,6 +339,11 @@ public class EditarComidaActivity extends AppCompatActivity {
     private void confirmarBorrado() {
         Comida c = repo.buscarPorId(idEnEdicion);
         if (c == null) { finish(); return; }
+        int enMenus = RepositorioMenus.getInstancia(this).contarItemsQueUsan(idEnEdicion);
+        if (enMenus > 0) {
+            Toast.makeText(this, getString(R.string.toast_comida_en_menu), Toast.LENGTH_SHORT).show();
+            return;
+        }
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.comida_eliminar))
                 .setMessage(getString(R.string.dialog_eliminar_msg, c.getNombre()))
