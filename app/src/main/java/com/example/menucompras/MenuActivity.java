@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.menucompras.modelo.Comida;
 import com.example.menucompras.modelo.Dia;
@@ -74,7 +73,6 @@ public class MenuActivity extends AppCompatActivity {
         return Dia.values()[spDia.getSelectedItemPosition()];
     }
 
-    // Dibuja las 6 franjas del dia elegido, cada una con sus comidas (o "Sin comidas").
     private void renderFranjas() {
         llFranjas.removeAllViews();
         final Dia dia = diaSeleccionado();
@@ -109,15 +107,28 @@ public class MenuActivity extends AppCompatActivity {
         }
     }
 
-    private void agregarFilaComida(LinearLayout contenedor, MenuItem it) {
+    private void agregarFilaComida(LinearLayout contenedor, final MenuItem it) {
         Comida c = repoComidas.buscarPorId(it.getComidaId());
         String nombre = (c != null) ? c.getNombre() : "(comida eliminada)";
-        TextView tv = new TextView(this);
+
+        View fila = getLayoutInflater().inflate(R.layout.item_menu_comida, contenedor, false);
+        TextView tv = fila.findViewById(R.id.tv_menu_comida);
+        TextView btnQuitar = fila.findViewById(R.id.btn_quitar_menu_comida);
+
         tv.setText(nombre + "  ×" + etiquetaFactor(it.getFactor()));
-        tv.setTextColor(ContextCompat.getColor(this, R.color.mc_ink));
-        tv.setTextSize(15f);
-        tv.setPadding(0, 8, 0, 8);
-        contenedor.addView(tv);
+
+        // Tap en el nombre -> editar el factor.
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { mostrarDialogoEditarFactor(it); }
+        });
+        btnQuitar.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                repoMenus.eliminar(it.getId());
+                renderFranjas();
+            }
+        });
+
+        contenedor.addView(fila);
     }
 
     // Catalogo de comidas, excluyendo las que ya estan en esta (dia, franja).
@@ -157,6 +168,23 @@ public class MenuActivity extends AppCompatActivity {
                     @Override public void onClick(DialogInterface d, int which) {
                         double factor = FACTOR_VALORES[which];
                         repoMenus.agregar(new MenuItem(0, comida.getId(), dia, franja, factor));
+                        renderFranjas();
+                    }
+                })
+                .setNegativeButton(getString(R.string.action_cancel), null)
+                .show();
+    }
+
+    private void mostrarDialogoEditarFactor(final MenuItem it) {
+        Comida c = repoComidas.buscarPorId(it.getComidaId());
+        String titulo = (c != null) ? c.getNombre() : getString(R.string.menu_elegir_comida);
+        new AlertDialog.Builder(this)
+                .setTitle(titulo)
+                .setItems(FACTOR_ETIQUETAS, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface d, int which) {
+                        double factor = FACTOR_VALORES[which];
+                        repoMenus.actualizar(new MenuItem(
+                                it.getId(), it.getComidaId(), it.getDia(), it.getFranja(), factor));
                         renderFranjas();
                     }
                 })
