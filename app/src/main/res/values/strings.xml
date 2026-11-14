@@ -104,5 +104,7 @@
     <string name="screen_menu">Menú semanal</string>
     <string name="menu_franja_vacia">Sin comidas</string>
     <string name="menu_agregar">+ Agregar</string>
+    <string name="menu_elegir_comida">Elegir comida</string>
+    <string name="menu_sin_comidas">No hay más comidas para agregar</string>
 
 </resources>
