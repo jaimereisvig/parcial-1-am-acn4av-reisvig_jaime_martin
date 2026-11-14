@@ -13,7 +13,7 @@ import com.example.menucompras.modelo.LineaDeComida;
 public class MenuComprasDBHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "menucompras.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
 
     // Tabla ingrediente
     public static final String T_ING = "ingrediente";
@@ -41,6 +41,22 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
     public static final String CI_INGREDIENTE_ID = "ingrediente_id";
     public static final String CI_CANTIDAD = "cantidad";
     public static final String CI_A_GUSTO = "a_gusto";
+
+    // Tabla menu (en esta etapa hay un unico menu, con id MENU_UNICO_ID)
+    public static final String T_MENU = "menu";
+    public static final String MENU_ID = "id";
+    public static final String MENU_ETIQUETA = "etiqueta";
+    public static final String MENU_FECHA_INICIO = "fecha_inicio";
+    public static final int MENU_UNICO_ID = 1;
+
+    // Tabla menu_item (una comida asignada a un dia + franja, con factor)
+    public static final String T_MI = "menu_item";
+    public static final String MI_ID = "id";
+    public static final String MI_MENU_ID = "menu_id";
+    public static final String MI_COMIDA_ID = "comida_id";
+    public static final String MI_DIA = "dia";
+    public static final String MI_FRANJA = "franja";
+    public static final String MI_FACTOR = "factor";
 
     private static MenuComprasDBHelper instancia;
 
@@ -92,15 +108,47 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + CI_INGREDIENTE_ID + ") REFERENCES " + T_ING + "(" + ING_ID + ") ON DELETE RESTRICT)");
 
         sembrar(db);
+
+        // Dominio de Menus (v2)
+        crearTablasMenu(db);
+        sembrarMenu(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Provisorio: al subir de version se recrea la base (todavia no hay datos de usuario que preservar).
-        db.execSQL("DROP TABLE IF EXISTS " + T_CI);
-        db.execSQL("DROP TABLE IF EXISTS " + T_COM);
-        db.execSQL("DROP TABLE IF EXISTS " + T_ING);
-        onCreate(db);
+        // Migracion aditiva: NO se recrea la base (se preservan ingredientes/comidas del usuario).
+        if (oldVersion < 2) {
+            // v1 -> v2: se agregan las tablas del dominio de Menus.
+            crearTablasMenu(db);
+            sembrarMenu(db);
+        }
+    }
+
+    private void crearTablasMenu(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + T_MENU + " (" +
+                MENU_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MENU_ETIQUETA + " TEXT NOT NULL, " +
+                MENU_FECHA_INICIO + " TEXT)");
+
+        // dia y franja se guardan con name() del enum (validez garantizada en Java); sin CHECK redundante.
+        db.execSQL("CREATE TABLE " + T_MI + " (" +
+                MI_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MI_MENU_ID + " INTEGER NOT NULL, " +
+                MI_COMIDA_ID + " INTEGER NOT NULL, " +
+                MI_DIA + " TEXT NOT NULL, " +
+                MI_FRANJA + " TEXT NOT NULL, " +
+                MI_FACTOR + " REAL NOT NULL DEFAULT 1 CHECK (" + MI_FACTOR + " > 0 AND " + MI_FACTOR + " <= 4), " +
+                "FOREIGN KEY (" + MI_MENU_ID + ") REFERENCES " + T_MENU + "(" + MENU_ID + ") ON DELETE CASCADE, " +
+                "FOREIGN KEY (" + MI_COMIDA_ID + ") REFERENCES " + T_COM + "(" + COM_ID + ") ON DELETE RESTRICT)");
+    }
+
+    // Siembra el menu unico (una fila, sin asignaciones; el usuario lo arma en la UI).
+    private void sembrarMenu(SQLiteDatabase db) {
+        ContentValues cv = new ContentValues();
+        cv.put(MENU_ID, MENU_UNICO_ID);
+        cv.put(MENU_ETIQUETA, "Menú semanal");
+        cv.putNull(MENU_FECHA_INICIO);
+        db.insertOrThrow(T_MENU, null, cv);
     }
 
     // Siembra inicial desde DatosEjemplo. Se inserta con el id EXPLICITO de cada objeto
