@@ -19,6 +19,34 @@
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/space_md" />
 
+        <LinearLayout
+            android:id="@+id/ll_barra_compra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/space_sm"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_progreso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/mc_muted"
+                android:textSize="@dimen/text_body" />
+
+            <Button
+                android:id="@+id/btn_reiniciar"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:text="@string/compras_reiniciar"
+                android:textColor="@color/mc_accent"
+                android:textSize="@dimen/text_action" />
+        </LinearLayout>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -113,5 +113,7 @@
     <string name="compras_chequear">Chequear</string>
     <string name="compras_vacia">Armá el menú para generar la lista</string>
     <string name="menu_ver_lista">Ver lista de compras</string>
+    <string name="compras_reiniciar">Reiniciar</string>
+    <string name="compras_progreso">Comprados: %1$d / %2$d</string>
 
 </resources>
