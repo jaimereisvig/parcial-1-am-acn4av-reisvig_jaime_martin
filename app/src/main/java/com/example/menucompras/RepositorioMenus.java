@@ -28,6 +28,25 @@ public class RepositorioMenus {
         return instancia;
     }
 
+    // id del menu del usuario logueado; si no existe (defensivo), lo crea.
+    private int menuIdDelUsuario(SQLiteDatabase db) {
+        String uid = SesionActual.uid();
+        Cursor c = db.query(MenuComprasDBHelper.T_MENU,
+                new String[]{MenuComprasDBHelper.MENU_ID},
+                MenuComprasDBHelper.MENU_USUARIO + " = ?", new String[]{uid},
+                null, null, null);
+        try {
+            if (c.moveToFirst()) return c.getInt(0);
+        } finally {
+            c.close();
+        }
+        ContentValues cv = new ContentValues();
+        cv.put(MenuComprasDBHelper.MENU_USUARIO, uid);
+        cv.put(MenuComprasDBHelper.MENU_ETIQUETA, "Menú semanal");
+        cv.putNull(MenuComprasDBHelper.MENU_FECHA_INICIO);
+        return (int) db.insertOrThrow(MenuComprasDBHelper.T_MENU, null, cv);
+    }
+
     private MenuItem desde(Cursor c) {
         int id = c.getInt(c.getColumnIndexOrThrow(MenuComprasDBHelper.MI_ID));
         int comidaId = c.getInt(c.getColumnIndexOrThrow(MenuComprasDBHelper.MI_COMIDA_ID));
@@ -37,10 +56,9 @@ public class RepositorioMenus {
         return new MenuItem(id, comidaId, dia, franja, factor);
     }
 
-    // El menu_id siempre es el del menu unico; el id lo asigna la BD.
-    private ContentValues valores(MenuItem it) {
+    private ContentValues valores(MenuItem it, int menuId) {
         ContentValues cv = new ContentValues();
-        cv.put(MenuComprasDBHelper.MI_MENU_ID, MenuComprasDBHelper.MENU_UNICO_ID);
+        cv.put(MenuComprasDBHelper.MI_MENU_ID, menuId);
         cv.put(MenuComprasDBHelper.MI_COMIDA_ID, it.getComidaId());
         cv.put(MenuComprasDBHelper.MI_DIA, it.getDia().name());
         cv.put(MenuComprasDBHelper.MI_FRANJA, it.getFranja().name());
@@ -48,13 +66,13 @@ public class RepositorioMenus {
         return cv;
     }
 
-    // Todas las asignaciones del menu unico.
     public List<MenuItem> getItems() {
         List<MenuItem> lista = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int menuId = menuIdDelUsuario(db);
         Cursor c = db.query(MenuComprasDBHelper.T_MI, null,
                 MenuComprasDBHelper.MI_MENU_ID + " = ?",
-                new String[]{String.valueOf(MenuComprasDBHelper.MENU_UNICO_ID)},
+                new String[]{String.valueOf(menuId)},
                 null, null, MenuComprasDBHelper.MI_ID + " ASC");
         try {
             while (c.moveToNext()) lista.add(desde(c));
@@ -64,15 +82,15 @@ public class RepositorioMenus {
         return lista;
     }
 
-    // Las asignaciones de una celda (dia + franja) del menu unico.
     public List<MenuItem> getItemsDe(Dia dia, Franja franja) {
         List<MenuItem> lista = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int menuId = menuIdDelUsuario(db);
         Cursor c = db.query(MenuComprasDBHelper.T_MI, null,
                 MenuComprasDBHelper.MI_MENU_ID + " = ? AND "
                         + MenuComprasDBHelper.MI_DIA + " = ? AND "
                         + MenuComprasDBHelper.MI_FRANJA + " = ?",
-                new String[]{String.valueOf(MenuComprasDBHelper.MENU_UNICO_ID), dia.name(), franja.name()},
+                new String[]{String.valueOf(menuId), dia.name(), franja.name()},
                 null, null, MenuComprasDBHelper.MI_ID + " ASC");
         try {
             while (c.moveToNext()) lista.add(desde(c));
@@ -82,16 +100,17 @@ public class RepositorioMenus {
         return lista;
     }
 
-    // Inserta una asignacion y devuelve el id que asigna la BD.
     public int agregar(MenuItem it) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long id = db.insertOrThrow(MenuComprasDBHelper.T_MI, null, valores(it));
+        int menuId = menuIdDelUsuario(db);
+        long id = db.insertOrThrow(MenuComprasDBHelper.T_MI, null, valores(it, menuId));
         return (int) id;
     }
 
     public void actualizar(MenuItem it) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.update(MenuComprasDBHelper.T_MI, valores(it),
+        int menuId = menuIdDelUsuario(db);
+        db.update(MenuComprasDBHelper.T_MI, valores(it, menuId),
                 MenuComprasDBHelper.MI_ID + " = ?", new String[]{String.valueOf(it.getId())});
     }
 
@@ -101,7 +120,6 @@ public class RepositorioMenus {
                 new String[]{String.valueOf(id)});
     }
 
-    // Cuantas asignaciones del menu usan una comida (para bloquear su borrado en M.2).
     public int contarItemsQueUsan(int comidaId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(

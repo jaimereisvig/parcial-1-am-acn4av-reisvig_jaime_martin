@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "585930606925",
+    "project_id": "menucompras-43970",
+    "storage_bucket": "menucompras-43970.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585930606925:android:ca188a588661d356e40f04",
+        "android_client_info": {
+          "package_name": "com.example.menucompras"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm-sPFOVG-Tko5jZVxWXa-Uysu2Lm2uQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

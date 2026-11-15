@@ -3,6 +3,7 @@ package com.example.menucompras;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.menucompras.modelo.CategoriaComida;
@@ -12,8 +13,6 @@ import com.example.menucompras.modelo.TipoComida;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.database.sqlite.SQLiteConstraintException;
 
 public class RepositorioComidas {
 
@@ -31,7 +30,6 @@ public class RepositorioComidas {
         return instancia;
     }
 
-    // Arma una Comida (con sus lineas) desde la fila actual del cursor.
     private Comida desde(SQLiteDatabase db, Cursor c) {
         int id = c.getInt(c.getColumnIndexOrThrow(MenuComprasDBHelper.COM_ID));
         String nombre = c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.COM_NOMBRE));
@@ -45,8 +43,6 @@ public class RepositorioComidas {
         return new Comida(id, nombre, comensales, tipo, categoria, preparacion, lineas);
     }
 
-    // Carga las lineas de una comida. En la BD "a gusto" => cantidad NULL;
-    // el modelo usa cantidad 0 cuando aGusto es true (la ignora).
     private List<LineaDeComida> lineasDe(SQLiteDatabase db, int comidaId) {
         List<LineaDeComida> lineas = new ArrayList<>();
         Cursor c = db.query(MenuComprasDBHelper.T_CI, null,
@@ -66,7 +62,6 @@ public class RepositorioComidas {
         return lineas;
     }
 
-    // Inserta las lineas de una comida (BD: aGusto => cantidad NULL).
     private void insertarLineas(SQLiteDatabase db, int comidaId, List<LineaDeComida> lineas) {
         for (LineaDeComida l : lineas) {
             ContentValues cv = new ContentValues();
@@ -83,8 +78,10 @@ public class RepositorioComidas {
         }
     }
 
+    // Incluye el usuario_uid del usuario logueado.
     private ContentValues valores(Comida c) {
         ContentValues cv = new ContentValues();
+        cv.put(MenuComprasDBHelper.COM_USUARIO, SesionActual.uid());
         cv.put(MenuComprasDBHelper.COM_NOMBRE, c.getNombre());
         cv.put(MenuComprasDBHelper.COM_COMENSALES, c.getComensalesBase());
         cv.put(MenuComprasDBHelper.COM_TIPO, c.getTipo().name());
@@ -96,8 +93,9 @@ public class RepositorioComidas {
     public List<Comida> getTodos() {
         List<Comida> lista = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(MenuComprasDBHelper.T_COM, null, null, null, null, null,
-                MenuComprasDBHelper.COM_ID + " ASC");
+        Cursor c = db.query(MenuComprasDBHelper.T_COM, null,
+                MenuComprasDBHelper.COM_USUARIO + " = ?", new String[]{SesionActual.uid()},
+                null, null, MenuComprasDBHelper.COM_ID + " ASC");
         try {
             while (c.moveToNext()) lista.add(desde(db, c));
         } finally {
@@ -122,9 +120,10 @@ public class RepositorioComidas {
     public boolean existeNombre(String nombre, int excluyendoId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(MenuComprasDBHelper.T_COM, new String[]{MenuComprasDBHelper.COM_ID},
-                MenuComprasDBHelper.COM_NOMBRE + " = ? COLLATE NOCASE AND "
+                MenuComprasDBHelper.COM_USUARIO + " = ? AND "
+                        + MenuComprasDBHelper.COM_NOMBRE + " = ? COLLATE NOCASE AND "
                         + MenuComprasDBHelper.COM_ID + " <> ?",
-                new String[]{nombre.trim(), String.valueOf(excluyendoId)},
+                new String[]{SesionActual.uid(), nombre.trim(), String.valueOf(excluyendoId)},
                 null, null, null);
         try {
             return c.getCount() > 0;
@@ -133,7 +132,7 @@ public class RepositorioComidas {
         }
     }
 
-    // Cuantas comidas usan un ingrediente (cada comida cuenta una vez).
+    // Cuantas comidas usan un ingrediente (el ingredienteId ya es propio del usuario).
     public int contarComidasQueUsan(int ingredienteId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(
@@ -149,7 +148,6 @@ public class RepositorioComidas {
         }
     }
 
-    // Inserta la comida y sus lineas (transaccion). Devuelve el id asignado por la BD.
     public int agregar(Comida c) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
@@ -163,7 +161,6 @@ public class RepositorioComidas {
         }
     }
 
-    // Actualiza la comida y reemplaza todas sus lineas (transaccion).
     public void actualizar(Comida c) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
@@ -184,10 +181,8 @@ public class RepositorioComidas {
         try {
             db.delete(MenuComprasDBHelper.T_COM, MenuComprasDBHelper.COM_ID + " = ?",
                     new String[]{String.valueOf(id)});
-            // Las lineas de la comida caen por ON DELETE CASCADE.
         } catch (SQLiteConstraintException e) {
-            // La comida esta usada en el menu (FK RESTRICT): no se borra.
-            // La app ya bloquea este caso antes (chequeo de "en uso en menus").
+            // Usada en el menu (FK RESTRICT): no se borra. La app ya lo bloquea antes.
         }
     }
 }

@@ -66,6 +66,8 @@ public class RegistroActivity extends AppCompatActivity {
                         // Guarda el perfil local (usuario + alias) asociado al uid de Firebase.
                         RepositorioUsuarios.getInstancia(this)
                                 .agregar(new Usuario(uid, usuario, alias, correo));
+                        // Copia el seed de ejemplo para este usuario.
+                        MenuComprasDBHelper.getInstancia(this).sembrarParaUsuario(uid);
                         irAHome();
                     } else {
                         btnRegistrar.setEnabled(true);

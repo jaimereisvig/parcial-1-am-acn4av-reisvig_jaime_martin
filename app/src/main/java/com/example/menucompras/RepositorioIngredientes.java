@@ -29,7 +29,6 @@ public class RepositorioIngredientes {
         return instancia;
     }
 
-    // Arma un Ingrediente desde la fila actual del cursor.
     private Ingrediente desde(Cursor c) {
         int id = c.getInt(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_ID));
         String nombre = c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.ING_NOMBRE));
@@ -43,9 +42,10 @@ public class RepositorioIngredientes {
         return new Ingrediente(id, nombre, tipoMedida, presCant, nombrePres, nombreUnidad, categoria);
     }
 
-    // Vuelca un Ingrediente a ContentValues (sin el id: lo maneja la BD).
+    // Incluye el usuario_uid del usuario logueado.
     private ContentValues valores(Ingrediente ing) {
         ContentValues cv = new ContentValues();
+        cv.put(MenuComprasDBHelper.ING_USUARIO, SesionActual.uid());
         cv.put(MenuComprasDBHelper.ING_NOMBRE, ing.getNombre());
         cv.put(MenuComprasDBHelper.ING_TIPO_MEDIDA, ing.getTipoMedida().name());
         cv.put(MenuComprasDBHelper.ING_PRES_CANT, ing.getPresentacionCantidad());
@@ -58,8 +58,9 @@ public class RepositorioIngredientes {
     public List<Ingrediente> getTodos() {
         List<Ingrediente> lista = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(MenuComprasDBHelper.T_ING, null, null, null, null, null,
-                MenuComprasDBHelper.ING_ID + " ASC");
+        Cursor c = db.query(MenuComprasDBHelper.T_ING, null,
+                MenuComprasDBHelper.ING_USUARIO + " = ?", new String[]{SesionActual.uid()},
+                null, null, MenuComprasDBHelper.ING_ID + " ASC");
         try {
             while (c.moveToNext()) lista.add(desde(c));
         } finally {
@@ -84,9 +85,10 @@ public class RepositorioIngredientes {
     public boolean existeNombre(String nombre, int excluyendoId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(MenuComprasDBHelper.T_ING, new String[]{MenuComprasDBHelper.ING_ID},
-                MenuComprasDBHelper.ING_NOMBRE + " = ? COLLATE NOCASE AND "
+                MenuComprasDBHelper.ING_USUARIO + " = ? AND "
+                        + MenuComprasDBHelper.ING_NOMBRE + " = ? COLLATE NOCASE AND "
                         + MenuComprasDBHelper.ING_ID + " <> ?",
-                new String[]{nombre.trim(), String.valueOf(excluyendoId)},
+                new String[]{SesionActual.uid(), nombre.trim(), String.valueOf(excluyendoId)},
                 null, null, null);
         try {
             return c.getCount() > 0;
@@ -98,8 +100,9 @@ public class RepositorioIngredientes {
     public Ingrediente buscarPorNombre(String nombre) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(MenuComprasDBHelper.T_ING, null,
-                MenuComprasDBHelper.ING_NOMBRE + " = ? COLLATE NOCASE",
-                new String[]{nombre.trim()}, null, null, null);
+                MenuComprasDBHelper.ING_USUARIO + " = ? AND "
+                        + MenuComprasDBHelper.ING_NOMBRE + " = ? COLLATE NOCASE",
+                new String[]{SesionActual.uid(), nombre.trim()}, null, null, null);
         try {
             if (c.moveToNext()) return desde(c);
             return null;
@@ -108,7 +111,6 @@ public class RepositorioIngredientes {
         }
     }
 
-    // Inserta y devuelve el id que asigna la BD (AUTOINCREMENT).
     public int agregar(Ingrediente ing) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long id = db.insertOrThrow(MenuComprasDBHelper.T_ING, null, valores(ing));
@@ -127,8 +129,7 @@ public class RepositorioIngredientes {
             db.delete(MenuComprasDBHelper.T_ING, MenuComprasDBHelper.ING_ID + " = ?",
                     new String[]{String.valueOf(id)});
         } catch (SQLiteConstraintException e) {
-            // El ingrediente esta referenciado por alguna comida (FK RESTRICT): no se borra.
-            // La app ya bloquea este caso antes de llegar aca (chequeo de "en uso").
+            // Referenciado por alguna comida (FK RESTRICT): no se borra. La app ya lo bloquea antes.
         }
     }
 }

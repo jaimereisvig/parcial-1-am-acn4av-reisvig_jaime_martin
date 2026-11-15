@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mc_bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="@dimen/space_xl">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textColor="@color/mc_brand"
+            android:textSize="@dimen/text_hero"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/space_xl"
+            android:text="@string/login_subtitulo"
+            android:textColor="@color/mc_muted"
+            android:textSize="@dimen/text_body" />
+
+        <EditText
+            android:id="@+id/et_correo"
+            style="@style/McInput"
+            android:inputType="textEmailAddress"
+            android:hint="@string/hint_correo" />
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/McInput"
+            android:layout_marginTop="@dimen/space_md"
+            android:inputType="textPassword"
+            android:hint="@string/hint_password" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_xl"
+            android:text="@string/login_iniciar"
+            android:textColor="@color/mc_accent_ink"
+            android:backgroundTint="@color/mc_accent" />
+
+        <TextView
+            android:id="@+id/tv_ir_registro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/space_lg"
+            android:padding="@dimen/space_sm"
+            android:text="@string/login_ir_registro"
+            android:textColor="@color/mc_accent"
+            android:textSize="@dimen/text_action" />
+
+    </LinearLayout>
+</ScrollView>
