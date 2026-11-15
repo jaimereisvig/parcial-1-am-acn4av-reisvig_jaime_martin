@@ -116,4 +116,28 @@
     <string name="compras_reiniciar">Reiniciar</string>
     <string name="compras_progreso">Comprados: %1$d / %2$d</string>
 
+    <!-- Login / Registro -->
+    <string name="login_subtitulo">Iniciá sesión para continuar</string>
+    <string name="hint_correo">Correo electrónico</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="login_iniciar">Iniciar sesión</string>
+    <string name="login_ir_registro">¿No tenés cuenta? Crear una</string>
+    <string name="screen_registro">Crear cuenta</string>
+    <string name="hint_usuario">Nombre de usuario</string>
+    <string name="hint_alias">Alias</string>
+    <string name="registro_registrarse">Registrarse</string>
+    <string name="registro_ir_login">¿Ya tenés cuenta? Iniciar sesión</string>
+    <string name="error_campos_vacios">Completá todos los campos</string>
+    <string name="error_correo_invalido">Ingresá un correo válido</string>
+    <string name="error_pass_corta">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="login_error_credenciales">Correo o contraseña incorrectos</string>
+    <string name="registro_error_correo_en_uso">Ese correo ya está registrado</string>
+    <string name="registro_error_pass_debil">La contraseña es muy débil</string>
+    <string name="error_sin_internet">Sin conexión a internet</string>
+    <string name="auth_error_generico">No se pudo completar. Probá de nuevo.</string>
+
+    <!-- Home: sesion -->
+    <string name="home_saludo">Hola, %1$s</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+
 </resources>

@@ -13,7 +13,7 @@ import com.example.menucompras.modelo.LineaDeComida;
 public class MenuComprasDBHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "menucompras.db";
-    public static final int DB_VERSION = 2;
+    public static final int DB_VERSION = 3;
 
     // Tabla ingrediente
     public static final String T_ING = "ingrediente";
@@ -57,6 +57,13 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
     public static final String MI_DIA = "dia";
     public static final String MI_FRANJA = "franja";
     public static final String MI_FACTOR = "factor";
+
+    // Tabla usuario (perfil local; la autenticacion la maneja Firebase Auth)
+    public static final String T_USER = "usuario";
+    public static final String USER_UID = "uid";              // UID de Firebase
+    public static final String USER_NOMBRE = "nombre_usuario";
+    public static final String USER_ALIAS = "alias";
+    public static final String USER_EMAIL = "email";
 
     private static MenuComprasDBHelper instancia;
 
@@ -112,15 +119,22 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
         // Dominio de Menus (v2)
         crearTablasMenu(db);
         sembrarMenu(db);
+
+        // Perfil de usuario local (v3)
+        crearTablaUsuario(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Migracion aditiva: NO se recrea la base (se preservan ingredientes/comidas del usuario).
+        // Migracion aditiva: NO se recrea la base (se preservan los datos del usuario).
         if (oldVersion < 2) {
             // v1 -> v2: se agregan las tablas del dominio de Menus.
             crearTablasMenu(db);
             sembrarMenu(db);
+        }
+        if (oldVersion < 3) {
+            // v2 -> v3: se agrega la tabla de perfil de usuario.
+            crearTablaUsuario(db);
         }
     }
 
@@ -140,6 +154,15 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
                 MI_FACTOR + " REAL NOT NULL DEFAULT 1 CHECK (" + MI_FACTOR + " > 0 AND " + MI_FACTOR + " <= 4), " +
                 "FOREIGN KEY (" + MI_MENU_ID + ") REFERENCES " + T_MENU + "(" + MENU_ID + ") ON DELETE CASCADE, " +
                 "FOREIGN KEY (" + MI_COMIDA_ID + ") REFERENCES " + T_COM + "(" + COM_ID + ") ON DELETE RESTRICT)");
+    }
+
+    // Perfil local del usuario autenticado. El uid es el de Firebase (no autoincrement).
+    private void crearTablaUsuario(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + T_USER + " (" +
+                USER_UID + " TEXT PRIMARY KEY, " +
+                USER_NOMBRE + " TEXT NOT NULL, " +
+                USER_ALIAS + " TEXT NOT NULL, " +
+                USER_EMAIL + " TEXT NOT NULL)");
     }
 
     // Siembra el menu unico (una fila, sin asignaciones; el usuario lo arma en la UI).

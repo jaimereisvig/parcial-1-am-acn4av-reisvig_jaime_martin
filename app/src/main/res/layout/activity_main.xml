@@ -21,6 +21,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tv_saludo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mc_muted"
+            android:textSize="@dimen/text_body"
+            app:layout_constraintTop_toTopOf="@id/tv_marca"
+            app:layout_constraintBottom_toBottomOf="@id/tv_marca"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <ImageView
             android:id="@+id/iv_hero"
             android:layout_width="@dimen/hero_size"
@@ -130,6 +140,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_ir_comidas" />
+
+        <Button
+            android:id="@+id/btn_cerrar_sesion"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/touch_height"
+            android:layout_marginTop="@dimen/space_xl"
+            android:text="@string/cerrar_sesion"
+            android:textColor="@color/mc_danger"
+            android:backgroundTint="@color/mc_surface"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_ir_menus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
