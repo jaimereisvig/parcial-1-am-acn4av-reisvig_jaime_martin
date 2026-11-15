@@ -53,13 +53,24 @@ public class ComidaAdapter extends RecyclerView.Adapter<ComidaAdapter.ComidaView
         holder.tvRinde.setText(holder.itemView.getContext()
                 .getString(R.string.comida_rinde, comida.getComensalesBase(), nIngr));
 
-        // Carga la imagen desde la URL (si hay); placeholder mientras carga o si falla.
-        Glide.with(holder.itemView.getContext())
-                .load(comida.getImagenUrl())
-                .centerCrop()
-                .placeholder(R.drawable.bg_chip_neutral)
-                .error(R.drawable.bg_chip_neutral)
-                .into(holder.ivImagen);
+        // Imagen de la comida: 3 estados — sin URL, cargando, URL rota.
+        String url = comida.getImagenUrl();
+        if (url == null || url.trim().isEmpty()) {
+            // Sin imagen cargada por el usuario → ícono "sin imagen".
+            int pad = Math.round(11 * holder.ivImagen.getResources().getDisplayMetrics().density);
+            holder.ivImagen.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            holder.ivImagen.setPadding(pad, pad, pad, pad);
+            holder.ivImagen.setImageResource(R.drawable.ic_sin_imagen);
+        } else {
+            // Hay URL → foto; si la carga falla, ícono "imagen rota".
+            holder.ivImagen.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            holder.ivImagen.setPadding(0, 0, 0, 0);
+            Glide.with(holder.itemView.getContext())
+                    .load(url)
+                    .placeholder(R.drawable.bg_chip_neutral)
+                    .error(R.drawable.ic_imagen_rota)
+                    .into(holder.ivImagen);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

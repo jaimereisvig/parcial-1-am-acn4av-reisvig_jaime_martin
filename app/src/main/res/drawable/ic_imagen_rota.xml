@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- marco de la foto -->
+    <path
+        android:pathData="M4,5 L20,5 L20,19 L4,19 Z"
+        android:strokeColor="@color/mc_muted"
+        android:strokeWidth="1.6"
+        android:strokeLineJoin="round" />
+    <!-- grieta (quiebre en zigzag) -->
+    <path
+        android:pathData="M12,5 L10,10 L13,12 L10.5,15 L12.5,19"
+        android:strokeColor="@color/mc_muted"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>
