@@ -3,11 +3,13 @@ package com.example.menucompras;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.menucompras.modelo.Comida;
 
 import java.util.List;
@@ -50,6 +52,15 @@ public class ComidaAdapter extends RecyclerView.Adapter<ComidaAdapter.ComidaView
         int nIngr = comida.getLineas().size();
         holder.tvRinde.setText(holder.itemView.getContext()
                 .getString(R.string.comida_rinde, comida.getComensalesBase(), nIngr));
+
+        // Carga la imagen desde la URL (si hay); placeholder mientras carga o si falla.
+        Glide.with(holder.itemView.getContext())
+                .load(comida.getImagenUrl())
+                .centerCrop()
+                .placeholder(R.drawable.bg_chip_neutral)
+                .error(R.drawable.bg_chip_neutral)
+                .into(holder.ivImagen);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,12 +77,14 @@ public class ComidaAdapter extends RecyclerView.Adapter<ComidaAdapter.ComidaView
     }
 
     static class ComidaViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivImagen;
         TextView tvNombre;
         TextView tvCategoria;
         TextView tvRinde;
 
         ComidaViewHolder(@NonNull View itemView) {
             super(itemView);
+            ivImagen = itemView.findViewById(R.id.iv_imagen_comida);
             tvNombre = itemView.findViewById(R.id.tv_nombre_comida);
             tvCategoria = itemView.findViewById(R.id.tv_categoria_comida);
             tvRinde = itemView.findViewById(R.id.tv_rinde);

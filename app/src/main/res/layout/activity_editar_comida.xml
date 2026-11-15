@@ -57,6 +57,13 @@
             android:gravity="top"
             android:hint="@string/hint_preparacion" />
 
+        <TextView style="@style/McLabel" android:text="@string/label_imagen_url" />
+        <EditText
+            android:id="@+id/et_imagen_url"
+            style="@style/McInput"
+            android:inputType="textUri"
+            android:hint="@string/hint_imagen_url" />
+
         <TextView style="@style/McLabel" android:text="@string/label_ingredientes" />
 
         <LinearLayout

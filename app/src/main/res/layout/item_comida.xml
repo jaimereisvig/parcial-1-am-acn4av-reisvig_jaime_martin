@@ -9,6 +9,17 @@
     android:padding="@dimen/space_lg"
     android:layout_marginBottom="@dimen/space_md">
 
+    <ImageView
+        android:id="@+id/iv_imagen_comida"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/bg_chip_neutral"
+        android:contentDescription="@string/cd_imagen_comida"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
     <TextView
         android:id="@+id/tv_nombre_comida"
         android:layout_width="0dp"
@@ -16,7 +27,8 @@
         android:textColor="@color/mc_ink"
         android:textSize="@dimen/text_title_item"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/space_md"
+        app:layout_constraintStart_toEndOf="@id/iv_imagen_comida"
         app:layout_constraintEnd_toStartOf="@id/iv_chevron_comida"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0"
@@ -27,8 +39,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginStart="@dimen/space_md"
         android:layout_marginTop="@dimen/space_sm"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_imagen_comida"
         app:layout_constraintTop_toBottomOf="@id/tv_nombre_comida">
 
         <TextView

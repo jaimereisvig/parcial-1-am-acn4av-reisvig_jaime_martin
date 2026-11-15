@@ -36,6 +36,7 @@ public class DatosEjemplo {
 
         lista.add(new Comida(1, "Puré de papa", 4, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.VARIOS, "",
+                "https://commons.wikimedia.org/wiki/Special:FilePath/Sous_vide_mashed_potatoes.jpg",
                 lineas(new LineaDeComida(9, 5, false),
                         new LineaDeComida(7, 0, true),
                         new LineaDeComida(10, 0, true),
@@ -44,6 +45,7 @@ public class DatosEjemplo {
 
         lista.add(new Comida(2, "Tarta de Acelga", 4, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.TARTAS, "",
+                "https://commons.wikimedia.org/wiki/Special:FilePath/Torta_Pasqualina_%28Ostertorte_aus_Ligurien%29.jpg",
                 lineas(new LineaDeComida(2, 2, false),
                         new LineaDeComida(13, 1, false),
                         new LineaDeComida(14, 3, false),
@@ -54,6 +56,7 @@ public class DatosEjemplo {
 
         lista.add(new Comida(3, "Guiso de lentejas", 4, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.GUISOS_ESTOFADOS, "",
+                "https://commons.wikimedia.org/wiki/Special:FilePath/Guiso_de_lentejas_argentino_con_chorizo.jpg",
                 lineas(new LineaDeComida(17, 250, false),
                         new LineaDeComida(2, 1, false),
                         new LineaDeComida(1, 3, false),
@@ -64,6 +67,7 @@ public class DatosEjemplo {
 
         lista.add(new Comida(4, "Milanesa de pollo", 2, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.AVES, "",
+                "https://commons.wikimedia.org/wiki/Special:FilePath/Chicken_milanesa_of_Argentina.jpg",
                 lineas(new LineaDeComida(4, 1, false),
                         new LineaDeComida(18, 0, true),
                         new LineaDeComida(14, 1, false),
@@ -72,6 +76,7 @@ public class DatosEjemplo {
 
         lista.add(new Comida(5, "Panqueques con dulce de leche", 4, TipoComida.ALMUERZO_CENA,
                 CategoriaComida.POSTRES, "",
+                "https://commons.wikimedia.org/wiki/Special:FilePath/Captura_de_pantalla_2022-08-25_135241.png",
                 lineas(new LineaDeComida(7, 250, false),
                         new LineaDeComida(14, 2, false),
                         new LineaDeComida(19, 125, false),

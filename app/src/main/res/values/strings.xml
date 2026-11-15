@@ -140,4 +140,9 @@
     <string name="home_saludo">Hola, %1$s</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
 
+    <!-- Imágenes -->
+    <string name="label_imagen_url">Imagen (URL, opcional)</string>
+    <string name="hint_imagen_url">https://…</string>
+    <string name="cd_imagen_comida">Imagen de la comida</string>
+
 </resources>

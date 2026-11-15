@@ -39,8 +39,9 @@ public class RepositorioComidas {
         CategoriaComida categoria = CategoriaComida.valueOf(
                 c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.COM_CATEGORIA)));
         String preparacion = c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.COM_PREPARACION));
+        String imagenUrl = c.getString(c.getColumnIndexOrThrow(MenuComprasDBHelper.COM_IMAGEN));
         List<LineaDeComida> lineas = lineasDe(db, id);
-        return new Comida(id, nombre, comensales, tipo, categoria, preparacion, lineas);
+        return new Comida(id, nombre, comensales, tipo, categoria, preparacion, imagenUrl, lineas);
     }
 
     private List<LineaDeComida> lineasDe(SQLiteDatabase db, int comidaId) {
@@ -78,7 +79,6 @@ public class RepositorioComidas {
         }
     }
 
-    // Incluye el usuario_uid del usuario logueado.
     private ContentValues valores(Comida c) {
         ContentValues cv = new ContentValues();
         cv.put(MenuComprasDBHelper.COM_USUARIO, SesionActual.uid());
@@ -87,6 +87,7 @@ public class RepositorioComidas {
         cv.put(MenuComprasDBHelper.COM_TIPO, c.getTipo().name());
         cv.put(MenuComprasDBHelper.COM_PREPARACION, c.getPreparacion());
         cv.put(MenuComprasDBHelper.COM_CATEGORIA, c.getCategoria().name());
+        cv.put(MenuComprasDBHelper.COM_IMAGEN, c.getImagenUrl());
         return cv;
     }
 
@@ -132,7 +133,6 @@ public class RepositorioComidas {
         }
     }
 
-    // Cuantas comidas usan un ingrediente (el ingredienteId ya es propio del usuario).
     public int contarComidasQueUsan(int ingredienteId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery(

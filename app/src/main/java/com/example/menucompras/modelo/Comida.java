@@ -10,23 +10,31 @@ public class Comida {
     private TipoComida tipo;
     private CategoriaComida categoria;
     private String preparacion;
+    private String imagenUrl;
     private List<LineaDeComida> lineas;
 
     // Sin líneas (arranca con lista vacía)
     public Comida(int id, String nombre, int comensalesBase, TipoComida tipo,
                   CategoriaComida categoria, String preparacion) {
-        this(id, nombre, comensalesBase, tipo, categoria, preparacion, new ArrayList<LineaDeComida>());
+        this(id, nombre, comensalesBase, tipo, categoria, preparacion, null, new ArrayList<LineaDeComida>());
     }
 
-    // Con líneas
+    // Con líneas (sin imagen)
     public Comida(int id, String nombre, int comensalesBase, TipoComida tipo,
                   CategoriaComida categoria, String preparacion, List<LineaDeComida> lineas) {
+        this(id, nombre, comensalesBase, tipo, categoria, preparacion, null, lineas);
+    }
+
+    // Con imagen y líneas
+    public Comida(int id, String nombre, int comensalesBase, TipoComida tipo,
+                  CategoriaComida categoria, String preparacion, String imagenUrl, List<LineaDeComida> lineas) {
         this.id = id;
         this.nombre = nombre;
         this.comensalesBase = comensalesBase;
         this.tipo = tipo;
         this.categoria = categoria;
         this.preparacion = preparacion;
+        this.imagenUrl = imagenUrl;
         this.lineas = lineas;
     }
 
@@ -36,5 +44,6 @@ public class Comida {
     public TipoComida getTipo() { return tipo; }
     public CategoriaComida getCategoria() { return categoria; }
     public String getPreparacion() { return preparacion; }
+    public String getImagenUrl() { return imagenUrl; }
     public List<LineaDeComida> getLineas() { return lineas; }
 }

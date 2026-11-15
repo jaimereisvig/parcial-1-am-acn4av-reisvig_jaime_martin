@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class MenuComprasDBHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "menucompras.db";
-    public static final int DB_VERSION = 4;
+    public static final int DB_VERSION = 5;
 
     // Tabla ingrediente
     public static final String T_ING = "ingrediente";
@@ -37,6 +37,7 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
     public static final String COM_TIPO = "tipo";
     public static final String COM_PREPARACION = "preparacion";
     public static final String COM_CATEGORIA = "categoria";
+    public static final String COM_IMAGEN = "imagen_url";
 
     // Tabla comida_ingrediente (linea de comida)
     public static final String T_CI = "comida_ingrediente";
@@ -62,7 +63,7 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
     public static final String MI_FRANJA = "franja";
     public static final String MI_FACTOR = "factor";
 
-    // Tabla usuario (perfil local; la autenticacion la maneja Firebase Auth)
+    // Tabla usuario (perfil local)
     public static final String T_USER = "usuario";
     public static final String USER_UID = "uid";
     public static final String USER_NOMBRE = "nombre_usuario";
@@ -93,7 +94,6 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
         crearTablasDatos(db);
         crearTablasMenu(db);
         crearTablaUsuario(db);
-        // Sin seed global: cada usuario recibe su copia al registrarse (sembrarParaUsuario).
     }
 
     @Override
@@ -102,8 +102,7 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
             crearTablaUsuario(db);
         }
         if (oldVersion < 4) {
-            // v<4: se reestructura a datos por-usuario. Se recrean las tablas de datos;
-            // los datos globales previos (de desarrollo) se descartan. Hijos antes que padres.
+            // v<4: reestructura a datos por-usuario (recrea tablas; descarta datos globales previos).
             db.execSQL("DROP TABLE IF EXISTS " + T_MI);
             db.execSQL("DROP TABLE IF EXISTS " + T_MENU);
             db.execSQL("DROP TABLE IF EXISTS " + T_CI);
@@ -111,6 +110,9 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + T_ING);
             crearTablasDatos(db);
             crearTablasMenu(db);
+        } else if (oldVersion < 5) {
+            // v4 -> v5: agrega la columna de imagen a comida (aditivo, preserva datos).
+            db.execSQL("ALTER TABLE " + T_COM + " ADD COLUMN " + COM_IMAGEN + " TEXT");
         }
     }
 
@@ -134,6 +136,7 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
                 COM_TIPO + " TEXT NOT NULL, " +
                 COM_PREPARACION + " TEXT, " +
                 COM_CATEGORIA + " TEXT NOT NULL DEFAULT 'VARIOS', " +
+                COM_IMAGEN + " TEXT, " +
                 "UNIQUE (" + COM_USUARIO + ", " + COM_NOMBRE + " COLLATE NOCASE))");
 
         db.execSQL("CREATE TABLE " + T_CI + " (" +
@@ -174,8 +177,7 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
                 USER_EMAIL + " TEXT NOT NULL)");
     }
 
-    // Copia el seed de ejemplo para un usuario. Reasigna ids (AUTOINCREMENT) y
-    // remapea las referencias de las lineas, para que no colisionen entre usuarios.
+    // Copia el seed de ejemplo para un usuario, remapeando ids.
     public void sembrarParaUsuario(String uid) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -202,11 +204,12 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
                 cv.put(COM_TIPO, c.getTipo().name());
                 cv.put(COM_PREPARACION, c.getPreparacion());
                 cv.put(COM_CATEGORIA, c.getCategoria().name());
+                cv.put(COM_IMAGEN, c.getImagenUrl());
                 long nuevaComidaId = db.insertOrThrow(T_COM, null, cv);
 
                 for (LineaDeComida l : c.getLineas()) {
                     Integer ingNuevo = mapIng.get(l.getIngredienteId());
-                    if (ingNuevo == null) continue; // defensivo
+                    if (ingNuevo == null) continue;
                     ContentValues cvl = new ContentValues();
                     cvl.put(CI_COMIDA_ID, (int) nuevaComidaId);
                     cvl.put(CI_INGREDIENTE_ID, ingNuevo);
@@ -221,7 +224,6 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
                 }
             }
 
-            // Menu semanal (vacio) del usuario.
             ContentValues cvm = new ContentValues();
             cvm.put(MENU_USUARIO, uid);
             cvm.put(MENU_ETIQUETA, "Menú semanal");
