@@ -1,0 +1,48 @@
+{
+  "comidas": [
+    {
+      "nombre": "Ñoquis con salsa de tomate",
+      "comensales": 4,
+      "tipo": "ALMUERZO_CENA",
+      "categoria": "PASTAS",
+      "preparacion": "Hervir los ñoquis hasta que floten y colar. Calentar la salsa, mezclar y servir con queso rallado.",
+      "imagenUrl": "",
+      "ingredientes": [
+        { "nombre": "Ñoquis de papa", "tipoMedida": "MASA", "presentacionCantidad": 500, "nombrePresentacion": "paquete", "nombreUnidad": "g", "categoria": "ALMACEN", "cantidad": 1000, "aGusto": false },
+        { "nombre": "Salsa de tomate", "tipoMedida": "VOLUMEN", "presentacionCantidad": 500, "nombrePresentacion": "pote", "nombreUnidad": "ml", "categoria": "ALMACEN", "cantidad": 500, "aGusto": false },
+        { "nombre": "Queso rallado", "tipoMedida": "MASA", "presentacionCantidad": 100, "nombrePresentacion": "sobre", "nombreUnidad": "g", "categoria": "LACTEOS", "cantidad": 50, "aGusto": false },
+        { "nombre": "Sal fina", "tipoMedida": "MASA", "presentacionCantidad": 500, "nombrePresentacion": "paquete", "nombreUnidad": "g", "categoria": "ALMACEN", "cantidad": null, "aGusto": true }
+      ]
+    },
+    {
+      "nombre": "Empanadas de carne",
+      "comensales": 4,
+      "tipo": "ALMUERZO_CENA",
+      "categoria": "EMPANADAS",
+      "preparacion": "Rehogar la cebolla, sumar la carne y condimentar. Rellenar las tapas, cerrar y hornear.",
+      "imagenUrl": "",
+      "ingredientes": [
+        { "nombre": "Tapas de empanada", "tipoMedida": "CONTEO", "presentacionCantidad": 12, "nombrePresentacion": "paquete", "nombreUnidad": "u", "categoria": "ALMACEN", "cantidad": 12, "aGusto": false },
+        { "nombre": "Carne picada", "tipoMedida": "MASA", "presentacionCantidad": 500, "nombrePresentacion": "bandeja", "nombreUnidad": "g", "categoria": "CARNICERIA", "cantidad": 500, "aGusto": false },
+        { "nombre": "Cebolla", "tipoMedida": "CONTEO", "presentacionCantidad": 1, "nombrePresentacion": "unidad", "nombreUnidad": "u", "categoria": "VERDULERIA", "cantidad": 2, "aGusto": false },
+        { "nombre": "Huevo", "tipoMedida": "CONTEO", "presentacionCantidad": 6, "nombrePresentacion": "media docena", "nombreUnidad": "u", "categoria": "ALMACEN", "cantidad": 2, "aGusto": false },
+        { "nombre": "Comino", "tipoMedida": "MASA", "presentacionCantidad": 25, "nombrePresentacion": "frasco", "nombreUnidad": "g", "categoria": "ALMACEN", "cantidad": null, "aGusto": true },
+        { "nombre": "Sal fina", "tipoMedida": "MASA", "presentacionCantidad": 500, "nombrePresentacion": "paquete", "nombreUnidad": "g", "categoria": "ALMACEN", "cantidad": null, "aGusto": true }
+      ]
+    },
+    {
+      "nombre": "Pollo al horno con papas",
+      "comensales": 4,
+      "tipo": "ALMUERZO_CENA",
+      "categoria": "AVES",
+      "preparacion": "Condimentar el pollo, disponerlo con las papas en una fuente y hornear hasta dorar.",
+      "imagenUrl": "",
+      "ingredientes": [
+        { "nombre": "Pollo trozado", "tipoMedida": "MASA", "presentacionCantidad": 1000, "nombrePresentacion": "bandeja", "nombreUnidad": "g", "categoria": "CARNICERIA", "cantidad": 1200, "aGusto": false },
+        { "nombre": "Papa", "tipoMedida": "MASA", "presentacionCantidad": 1000, "nombrePresentacion": "bolsa", "nombreUnidad": "g", "categoria": "VERDULERIA", "cantidad": 1000, "aGusto": false },
+        { "nombre": "Aceite", "tipoMedida": "VOLUMEN", "presentacionCantidad": 900, "nombrePresentacion": "botella", "nombreUnidad": "ml", "categoria": "ALMACEN", "cantidad": 50, "aGusto": false },
+        { "nombre": "Sal fina", "tipoMedida": "MASA", "presentacionCantidad": 500, "nombrePresentacion": "paquete", "nombreUnidad": "g", "categoria": "ALMACEN", "cantidad": null, "aGusto": true }
+      ]
+    }
+  ]
+}

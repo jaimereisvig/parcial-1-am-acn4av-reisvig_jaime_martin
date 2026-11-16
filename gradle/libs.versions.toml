@@ -10,6 +10,7 @@ constraintlayout = "2.1.4"
 googleServices = "4.4.2"
 firebaseBom = "33.1.2"
 glide = "4.16.0"
+volley = "1.2.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -23,6 +24,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
