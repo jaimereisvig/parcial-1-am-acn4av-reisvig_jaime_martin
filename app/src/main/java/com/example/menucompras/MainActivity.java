@@ -1,10 +1,14 @@
 package com.example.menucompras;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +17,14 @@ import com.example.menucompras.modelo.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
+
+    private Button btnRespaldar;
+    private TextView tvUltimoRespaldo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
         Button btnIrComidas = findViewById(R.id.btn_ir_comidas);
         Button btnIrMenus = findViewById(R.id.btn_ir_menus);
         TextView tvSaludo = findViewById(R.id.tv_saludo);
-        Button btnCerrarSesion = findViewById(R.id.btn_cerrar_sesion);
+        TextView tvSalir = findViewById(R.id.tv_salir);
+        btnRespaldar = findViewById(R.id.btn_respaldar);
+        tvUltimoRespaldo = findViewById(R.id.tv_ultimo_respaldo);
 
         // Saludo con el alias del perfil local (si existe en este dispositivo).
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -65,9 +78,57 @@ public class MainActivity extends AppCompatActivity {
             @Override public void onClick(View v) { mostrarComoFunciona(); }
         });
 
-        btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
+        btnRespaldar.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { respaldar(); }
+        });
+
+        tvSalir.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { cerrarSesion(); }
         });
+
+        cargarUltimoRespaldo();
+    }
+
+    private void respaldar() {
+        if (!hayInternet()) {
+            Toast.makeText(this, R.string.respaldo_sin_internet, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        btnRespaldar.setEnabled(false);
+        Toast.makeText(this, R.string.respaldo_en_curso, Toast.LENGTH_SHORT).show();
+        ServicioRespaldo.respaldar(this, new ServicioRespaldo.Callback() {
+            @Override public void onExito() {
+                btnRespaldar.setEnabled(true);
+                Toast.makeText(MainActivity.this, R.string.respaldo_ok, Toast.LENGTH_SHORT).show();
+                mostrarFecha(new Date()); // feedback inmediato con la hora local
+            }
+            @Override public void onError(String mensaje) {
+                btnRespaldar.setEnabled(true);
+                Toast.makeText(MainActivity.this, R.string.respaldo_error, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void cargarUltimoRespaldo() {
+        ServicioRespaldo.ultimaFecha(fecha -> mostrarFecha(fecha));
+    }
+
+    private void mostrarFecha(Date fecha) {
+        if (fecha == null) {
+            tvUltimoRespaldo.setText(R.string.home_sin_respaldo);
+        } else {
+            String f = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault()).format(fecha);
+            tvUltimoRespaldo.setText(getString(R.string.home_ultimo_respaldo, f));
+        }
+    }
+
+    private boolean hayInternet() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+        Network red = cm.getActiveNetwork();
+        if (red == null) return false;
+        NetworkCapabilities cap = cm.getNetworkCapabilities(red);
+        return cap != null && cap.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
     }
 
     private void cerrarSesion() {

@@ -25,6 +25,7 @@
     <string name="home_como_funciona_msg">1) Cargás tus ingredientes.\n2) Armás comidas con esos ingredientes.\n3) Planificás el menú de la semana.\n4) La app arma la lista de compras, ordenada por góndola.</string>
     <string name="home_hero_desc">Ilustración de un carrito de compras</string>
     <string name="toast_menus_proximamente">Menús: próxima iteración</string>
+    <string name="home_salir">Salir</string>
 
     <!-- Navegación / títulos de pantalla -->
     <string name="screen_ingredientes">Ingredientes</string>
@@ -151,5 +152,14 @@
     <string name="donde_comprar_sin_ubicacion">Activá la ubicación para ver dónde comprar</string>
     <string name="donde_comprar_sin_ubicacion_actual">No se pudo obtener tu ubicación. Probá de nuevo.</string>
     <string name="donde_comprar_permiso_denegado">Necesito el permiso de ubicación para mostrarte dónde comprar.</string>
+
+    <!-- Respaldo en la nube -->
+    <string name="home_respaldar">Respaldar en la nube</string>
+    <string name="home_ultimo_respaldo">Último respaldo: %1$s</string>
+    <string name="home_sin_respaldo">Sin respaldos todavía</string>
+    <string name="respaldo_en_curso">Respaldando…</string>
+    <string name="respaldo_ok">Respaldo guardado</string>
+    <string name="respaldo_error">No se pudo respaldar. Probá de nuevo.</string>
+    <string name="respaldo_sin_internet">Sin conexión: no se respaldó</string>
 
 </resources>
