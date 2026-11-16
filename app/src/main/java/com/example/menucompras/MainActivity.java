@@ -24,6 +24,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnRespaldar;
+    private Button btnRestaurar;
     private TextView tvUltimoRespaldo;
 
     @Override
@@ -82,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
             @Override public void onClick(View v) { respaldar(); }
         });
 
+        btnRestaurar = findViewById(R.id.btn_restaurar);
+        btnRestaurar.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { restaurar(); }
+        });
+
         tvSalir.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { cerrarSesion(); }
         });
@@ -111,6 +117,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void cargarUltimoRespaldo() {
         ServicioRespaldo.ultimaFecha(fecha -> mostrarFecha(fecha));
+    }
+
+    private void restaurar() {
+        if (!hayInternet()) {
+            Toast.makeText(this, R.string.respaldo_sin_internet, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ServicioRespaldo.ultimaFecha(fecha -> {
+            if (fecha == null) {
+                Toast.makeText(this, R.string.restaurar_sin_respaldo, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String f = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault()).format(fecha);
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.restaurar_confirmar_titulo)
+                    .setMessage(getString(R.string.restaurar_confirmar_msg, f))
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .setPositiveButton(R.string.action_accept, (d, w) -> ejecutarRestauracion())
+                    .show();
+        });
+    }
+
+    private void ejecutarRestauracion() {
+        btnRestaurar.setEnabled(false);
+        Toast.makeText(this, R.string.restaurar_en_curso, Toast.LENGTH_SHORT).show();
+        ServicioRespaldo.restaurar(this, new ServicioRespaldo.CallbackRestaurar() {
+            @Override public void onExito() {
+                Toast.makeText(MainActivity.this, R.string.restaurar_ok, Toast.LENGTH_SHORT).show();
+                recreate(); // recarga saludo y fecha
+            }
+            @Override public void onSinRespaldo() {
+                btnRestaurar.setEnabled(true);
+                Toast.makeText(MainActivity.this, R.string.restaurar_sin_respaldo, Toast.LENGTH_SHORT).show();
+            }
+            @Override public void onError(String mensaje) {
+                btnRestaurar.setEnabled(true);
+                Toast.makeText(MainActivity.this, R.string.restaurar_error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void mostrarFecha(Date fecha) {

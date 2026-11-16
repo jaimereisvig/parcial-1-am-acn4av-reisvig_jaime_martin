@@ -9,6 +9,9 @@ import com.example.menucompras.modelo.Comida;
 import com.example.menucompras.modelo.DatosEjemplo;
 import com.example.menucompras.modelo.Ingrediente;
 import com.example.menucompras.modelo.LineaDeComida;
+import com.example.menucompras.modelo.MenuItem;
+import com.example.menucompras.modelo.Usuario;
+import java.util.List;
 
 import java.util.HashMap;
 
@@ -229,6 +232,100 @@ public class MenuComprasDBHelper extends SQLiteOpenHelper {
             cvm.put(MENU_ETIQUETA, "Menú semanal");
             cvm.putNull(MENU_FECHA_INICIO);
             db.insertOrThrow(T_MENU, null, cvm);
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    // Reemplaza TODOS los datos del usuario con los de un respaldo, remapeando ids.
+    public void restaurarParaUsuario(String uid, Usuario perfil,
+                                     List<Ingrediente> ingredientes,
+                                     List<Comida> comidas,
+                                     List<MenuItem> menuItems) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            // 1) Borrar lo actual del usuario (CASCADE limpia líneas y menu_item).
+            db.delete(T_MENU, MENU_USUARIO + " = ?", new String[]{uid});
+            db.delete(T_COM, COM_USUARIO + " = ?", new String[]{uid});
+            db.delete(T_ING, ING_USUARIO + " = ?", new String[]{uid});
+
+            // 2) Ingredientes (remapea id viejo -> nuevo).
+            HashMap<Integer, Integer> mapIng = new HashMap<>();
+            for (Ingrediente ing : ingredientes) {
+                ContentValues cv = new ContentValues();
+                cv.put(ING_USUARIO, uid);
+                cv.put(ING_NOMBRE, ing.getNombre());
+                cv.put(ING_TIPO_MEDIDA, ing.getTipoMedida().name());
+                cv.put(ING_PRES_CANT, ing.getPresentacionCantidad());
+                cv.put(ING_NOMBRE_PRES, ing.getNombrePresentacion());
+                cv.put(ING_NOMBRE_UNIDAD, ing.getNombreUnidad());
+                cv.put(ING_CATEGORIA, ing.getCategoria().name());
+                long nuevoId = db.insertOrThrow(T_ING, null, cv);
+                mapIng.put(ing.getId(), (int) nuevoId);
+            }
+
+            // 3) Comidas (remapea id; líneas remapean ingredienteId).
+            HashMap<Integer, Integer> mapCom = new HashMap<>();
+            for (Comida c : comidas) {
+                ContentValues cv = new ContentValues();
+                cv.put(COM_USUARIO, uid);
+                cv.put(COM_NOMBRE, c.getNombre());
+                cv.put(COM_COMENSALES, c.getComensalesBase());
+                cv.put(COM_TIPO, c.getTipo().name());
+                cv.put(COM_PREPARACION, c.getPreparacion());
+                cv.put(COM_CATEGORIA, c.getCategoria().name());
+                cv.put(COM_IMAGEN, c.getImagenUrl());
+                long nuevaComidaId = db.insertOrThrow(T_COM, null, cv);
+                mapCom.put(c.getId(), (int) nuevaComidaId);
+
+                for (LineaDeComida l : c.getLineas()) {
+                    Integer ingNuevo = mapIng.get(l.getIngredienteId());
+                    if (ingNuevo == null) continue;
+                    ContentValues cvl = new ContentValues();
+                    cvl.put(CI_COMIDA_ID, (int) nuevaComidaId);
+                    cvl.put(CI_INGREDIENTE_ID, ingNuevo);
+                    if (l.isAGusto()) {
+                        cvl.put(CI_A_GUSTO, 1);
+                        cvl.putNull(CI_CANTIDAD);
+                    } else {
+                        cvl.put(CI_A_GUSTO, 0);
+                        cvl.put(CI_CANTIDAD, l.getCantidad());
+                    }
+                    db.insertOrThrow(T_CI, null, cvl);
+                }
+            }
+
+            // 4) Menú + items (remapea comidaId).
+            ContentValues cvm = new ContentValues();
+            cvm.put(MENU_USUARIO, uid);
+            cvm.put(MENU_ETIQUETA, "Menú semanal");
+            cvm.putNull(MENU_FECHA_INICIO);
+            long menuId = db.insertOrThrow(T_MENU, null, cvm);
+
+            for (MenuItem it : menuItems) {
+                Integer comNuevo = mapCom.get(it.getComidaId());
+                if (comNuevo == null) continue;
+                ContentValues cvi = new ContentValues();
+                cvi.put(MI_MENU_ID, (int) menuId);
+                cvi.put(MI_COMIDA_ID, comNuevo);
+                cvi.put(MI_DIA, it.getDia().name());
+                cvi.put(MI_FRANJA, it.getFranja().name());
+                cvi.put(MI_FACTOR, it.getFactor());
+                db.insertOrThrow(T_MI, null, cvi);
+            }
+
+            // 5) Perfil (REPLACE por si ya existe en este dispositivo).
+            if (perfil != null) {
+                ContentValues cvu = new ContentValues();
+                cvu.put(USER_UID, uid);
+                cvu.put(USER_NOMBRE, perfil.getNombreUsuario());
+                cvu.put(USER_ALIAS, perfil.getAlias());
+                cvu.put(USER_EMAIL, perfil.getEmail());
+                db.insertWithOnConflict(T_USER, null, cvu, SQLiteDatabase.CONFLICT_REPLACE);
+            }
 
             db.setTransactionSuccessful();
         } finally {

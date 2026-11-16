@@ -156,17 +156,35 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_ir_comidas" />
 
-        <Button
-            android:id="@+id/btn_respaldar"
+        <LinearLayout
+            android:id="@+id/ll_respaldo"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_height"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="@dimen/space_xl"
-            android:text="@string/home_respaldar"
-            android:textColor="@color/mc_ink"
-            android:backgroundTint="@color/mc_surface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_ir_menus" />
+            app:layout_constraintTop_toBottomOf="@id/btn_ir_menus">
+
+            <Button
+                android:id="@+id/btn_respaldar"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/touch_height"
+                android:layout_weight="1"
+                android:text="@string/home_respaldar"
+                android:textColor="@color/mc_ink"
+                android:backgroundTint="@color/mc_surface" />
+
+            <Button
+                android:id="@+id/btn_restaurar"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/touch_height"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/space_md"
+                android:text="@string/home_restaurar"
+                android:textColor="@color/mc_ink"
+                android:backgroundTint="@color/mc_surface" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_ultimo_respaldo"
@@ -178,7 +196,7 @@
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_respaldar" />
+            app:layout_constraintTop_toBottomOf="@id/ll_respaldo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

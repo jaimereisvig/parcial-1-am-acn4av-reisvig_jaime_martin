@@ -154,12 +154,20 @@
     <string name="donde_comprar_permiso_denegado">Necesito el permiso de ubicación para mostrarte dónde comprar.</string>
 
     <!-- Respaldo en la nube -->
-    <string name="home_respaldar">Respaldar en la nube</string>
+    <string name="home_respaldar">Respaldar</string>
     <string name="home_ultimo_respaldo">Último respaldo: %1$s</string>
     <string name="home_sin_respaldo">Sin respaldos todavía</string>
     <string name="respaldo_en_curso">Respaldando…</string>
     <string name="respaldo_ok">Respaldo guardado</string>
     <string name="respaldo_error">No se pudo respaldar. Probá de nuevo.</string>
     <string name="respaldo_sin_internet">Sin conexión: no se respaldó</string>
+
+    <string name="home_restaurar">Restaurar</string>
+    <string name="restaurar_confirmar_titulo">Restaurar respaldo</string>
+    <string name="restaurar_confirmar_msg">Esto reemplaza tus datos actuales por el respaldo del %1$s. ¿Seguir?</string>
+    <string name="restaurar_sin_respaldo">No hay respaldos para restaurar</string>
+    <string name="restaurar_en_curso">Restaurando…</string>
+    <string name="restaurar_ok">Datos restaurados</string>
+    <string name="restaurar_error">No se pudo restaurar. Probá de nuevo.</string>
 
 </resources>

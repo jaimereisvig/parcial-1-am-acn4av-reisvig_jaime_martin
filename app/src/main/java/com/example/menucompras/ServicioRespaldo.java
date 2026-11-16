@@ -2,10 +2,16 @@ package com.example.menucompras;
 
 import android.content.Context;
 
+import com.example.menucompras.modelo.Categoria;
+import com.example.menucompras.modelo.CategoriaComida;
 import com.example.menucompras.modelo.Comida;
+import com.example.menucompras.modelo.Dia;
+import com.example.menucompras.modelo.Franja;
 import com.example.menucompras.modelo.Ingrediente;
 import com.example.menucompras.modelo.LineaDeComida;
 import com.example.menucompras.modelo.MenuItem;
+import com.example.menucompras.modelo.TipoComida;
+import com.example.menucompras.modelo.TipoMedida;
 import com.example.menucompras.modelo.Usuario;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Respaldo del usuario en Firestore: documento respaldos/{uid}.
- * C.2 = respaldar (set). C.3 = restaurar (pendiente).
+ * Respaldo del usuario en Firestore: documento respaldos/{uid}
+ * (get + reemplazo con remapeo de ids).
  */
 public class ServicioRespaldo {
 
@@ -34,6 +40,12 @@ public class ServicioRespaldo {
         void onFecha(Date fecha); // null si todavía no hay respaldo
     }
 
+    public interface CallbackRestaurar {
+        void onExito();
+        void onSinRespaldo();
+        void onError(String mensaje);
+    }
+
     private ServicioRespaldo() {}
 
     // ---- Respaldar: sube todo lo local del usuario a su documento ----
@@ -41,13 +53,11 @@ public class ServicioRespaldo {
         String uid = SesionActual.uid();
         if (uid == null) { cb.onError("No hay sesión activa."); return; }
 
-        // 1) Leer lo local.
         Usuario perfil = RepositorioUsuarios.getInstancia(context).buscarPorUid(uid);
         List<Ingrediente> ingredientes = RepositorioIngredientes.getInstancia(context).getTodos();
         List<Comida> comidas = RepositorioComidas.getInstancia(context).getTodos();
         List<MenuItem> menuItems = RepositorioMenus.getInstancia(context).getItems();
 
-        // 2) Armar el documento (ids originales incluidos, para remapear al restaurar).
         Map<String, Object> doc = new HashMap<>();
         doc.put("version", VERSION);
         doc.put("timestamp", FieldValue.serverTimestamp());
@@ -108,7 +118,6 @@ public class ServicioRespaldo {
         }
         doc.put("menuItems", items);
 
-        // 3) Subir. set() reemplaza el documento entero (es un respaldo, no un merge).
         FirebaseFirestore.getInstance()
                 .collection(COL).document(uid)
                 .set(doc)
@@ -116,7 +125,7 @@ public class ServicioRespaldo {
                 .addOnFailureListener(e -> cb.onError(e.getMessage()));
     }
 
-    // ---- Fecha del último respaldo (para mostrarla discreta en Home) ----
+    // ---- Fecha del último respaldo (para Home) ----
     public static void ultimaFecha(CallbackFecha cb) {
         String uid = SesionActual.uid();
         if (uid == null) { cb.onFecha(null); return; }
@@ -132,4 +141,83 @@ public class ServicioRespaldo {
                 })
                 .addOnFailureListener(e -> cb.onFecha(null));
     }
+
+    // ---- Restaurar: baja el respaldo y reemplaza lo local (con remapeo de ids) ----
+    @SuppressWarnings("unchecked")
+    public static void restaurar(Context context, CallbackRestaurar cb) {
+        String uid = SesionActual.uid();
+        if (uid == null) { cb.onError("No hay sesión activa."); return; }
+
+        FirebaseFirestore.getInstance()
+                .collection(COL).document(uid)
+                .get()
+                .addOnSuccessListener(snap -> {
+                    if (!snap.exists()) { cb.onSinRespaldo(); return; }
+                    try {
+                        Usuario perfil = null;
+                        Map<String, Object> p = (Map<String, Object>) snap.get("perfil");
+                        if (p != null) {
+                            perfil = new Usuario(uid, str(p.get("nombreUsuario")),
+                                    str(p.get("alias")), str(p.get("email")));
+                        }
+
+                        List<Ingrediente> ingredientes = new ArrayList<>();
+                        List<Map<String, Object>> ings = (List<Map<String, Object>>) snap.get("ingredientes");
+                        if (ings != null) for (Map<String, Object> m : ings) {
+                            ingredientes.add(new Ingrediente(
+                                    intt(m.get("id")),
+                                    str(m.get("nombre")),
+                                    TipoMedida.valueOf(str(m.get("tipoMedida"))),
+                                    dbl(m.get("presentacionCantidad")),
+                                    str(m.get("nombrePresentacion")),
+                                    str(m.get("nombreUnidad")),
+                                    Categoria.valueOf(str(m.get("categoria")))));
+                        }
+
+                        List<Comida> comidas = new ArrayList<>();
+                        List<Map<String, Object>> coms = (List<Map<String, Object>>) snap.get("comidas");
+                        if (coms != null) for (Map<String, Object> m : coms) {
+                            List<LineaDeComida> lineas = new ArrayList<>();
+                            List<Map<String, Object>> ls = (List<Map<String, Object>>) m.get("lineas");
+                            if (ls != null) for (Map<String, Object> lm : ls) {
+                                boolean aGusto = Boolean.TRUE.equals(lm.get("aGusto"));
+                                double cant = aGusto ? 0 : dbl(lm.get("cantidad"));
+                                lineas.add(new LineaDeComida(intt(lm.get("ingredienteId")), cant, aGusto));
+                            }
+                            comidas.add(new Comida(
+                                    intt(m.get("id")),
+                                    str(m.get("nombre")),
+                                    intt(m.get("comensalesBase")),
+                                    TipoComida.valueOf(str(m.get("tipo"))),
+                                    CategoriaComida.valueOf(str(m.get("categoria"))),
+                                    str(m.get("preparacion")),
+                                    str(m.get("imagenUrl")),
+                                    lineas));
+                        }
+
+                        List<MenuItem> menuItems = new ArrayList<>();
+                        List<Map<String, Object>> mis = (List<Map<String, Object>>) snap.get("menuItems");
+                        if (mis != null) for (Map<String, Object> m : mis) {
+                            menuItems.add(new MenuItem(
+                                    0,
+                                    intt(m.get("comidaId")),
+                                    Dia.valueOf(str(m.get("dia"))),
+                                    Franja.valueOf(str(m.get("franja"))),
+                                    dbl(m.get("factor"))));
+                        }
+
+                        MenuComprasDBHelper.getInstancia(context)
+                                .restaurarParaUsuario(uid, perfil, ingredientes, comidas, menuItems);
+                        cb.onExito();
+                    } catch (Exception e) {
+                        cb.onError(e.getMessage());
+                    }
+                })
+                .addOnFailureListener(e -> cb.onError(e.getMessage()));
+    }
+
+    // ---- Helpers de parseo (Firestore devuelve Long/Double/Boolean) ----
+    private static String str(Object o) { return o == null ? null : o.toString(); }
+    private static int intt(Object o) { return o == null ? 0 : ((Number) o).intValue(); }
+    private static double dbl(Object o) { return o == null ? 0 : ((Number) o).doubleValue(); }
 }
