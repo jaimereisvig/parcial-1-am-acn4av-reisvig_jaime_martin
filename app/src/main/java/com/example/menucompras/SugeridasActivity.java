@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,8 +34,9 @@ public class SugeridasActivity extends AppCompatActivity {
         adapter = new SugeridaAdapter(new ArrayList<ComidaSugerida>());
         adapter.setOnItemClickListener(new SugeridaAdapter.OnItemClickListener() {
             @Override public void onItemClick(ComidaSugerida comida) {
-                // F.3: abrir el detalle pasando la comida como Parcelable.
-                Toast.makeText(SugeridasActivity.this, comida.getNombre(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(SugeridasActivity.this, DetalleSugeridaActivity.class);
+                i.putExtra(DetalleSugeridaActivity.EXTRA_COMIDA, comida);
+                startActivity(i);
             }
         });
         rv.setAdapter(adapter);
