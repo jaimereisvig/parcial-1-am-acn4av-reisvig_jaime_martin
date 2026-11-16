@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
+    android:padding="@dimen/space_lg"
+    android:layout_marginBottom="@dimen/space_md">
+
+    <ImageView
+        android:id="@+id/iv_imagen_sugerida"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/bg_chip_neutral"
+        android:contentDescription="@string/cd_imagen_sugerida"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_nombre_sugerida"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mc_ink"
+        android:textSize="@dimen/text_title_item"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/space_md"
+        app:layout_constraintStart_toEndOf="@id/iv_imagen_sugerida"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        tools:text="Ñoquis con salsa de tomate" />
+
+    <TextView
+        android:id="@+id/tv_resumen_sugerida"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mc_muted"
+        android:textSize="@dimen/text_chip"
+        android:layout_marginStart="@dimen/space_md"
+        android:layout_marginTop="@dimen/space_xs"
+        app:layout_constraintStart_toEndOf="@id/iv_imagen_sugerida"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_nombre_sugerida"
+        app:layout_constraintHorizontal_bias="0"
+        tools:text="Pastas · 4 ingredientes" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

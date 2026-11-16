@@ -77,6 +77,13 @@ public class ComidasActivity extends AppCompatActivity {
                 startActivity(new Intent(ComidasActivity.this, EditarComidaActivity.class));
             }
         });
+
+        TextView tvVerSugeridas = findViewById(R.id.tv_ver_sugeridas);
+        tvVerSugeridas.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                startActivity(new Intent(ComidasActivity.this, SugeridasActivity.class));
+            }
+        });
     }
 
     @Override

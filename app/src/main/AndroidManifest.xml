@@ -45,6 +45,7 @@
         <activity android:name=".EditarComidaActivity" />
         <activity android:name=".MenuActivity" android:exported="false" />
         <activity android:name=".ListaComprasActivity" android:exported="false" />
+        <activity android:name=".SugeridasActivity" android:exported="false" />
     </application>
 
 </manifest>

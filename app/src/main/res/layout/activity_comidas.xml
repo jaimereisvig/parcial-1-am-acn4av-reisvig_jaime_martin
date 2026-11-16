@@ -10,14 +10,31 @@
         android:orientation="vertical"
         android:padding="@dimen/space_lg">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/screen_comidas"
-            android:textColor="@color/mc_ink"
-            android:textSize="@dimen/text_title_screen"
-            android:textStyle="bold"
-            android:layout_marginBottom="@dimen/space_md" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/space_md">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/screen_comidas"
+                android:textColor="@color/mc_ink"
+                android:textSize="@dimen/text_title_screen"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_ver_sugeridas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space_sm"
+                android:text="@string/comidas_ver_sugeridas"
+                android:textColor="@color/mc_accent"
+                android:textSize="@dimen/text_action" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/et_buscar_comida"
