@@ -37,6 +37,17 @@
                 android:textSize="@dimen/text_body" />
 
             <Button
+                android:id="@+id/btn_donde_comprar"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:text="@string/compras_donde_comprar"
+                android:textColor="@color/mc_accent"
+                android:textSize="@dimen/text_action"
+                android:layout_marginEnd="@dimen/space_sm" />
+
+            <Button
                 android:id="@+id/btn_reiniciar"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
@@ -46,6 +57,15 @@
                 android:textColor="@color/mc_accent"
                 android:textSize="@dimen/text_action" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_donde_comprar_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mc_muted"
+            android:textSize="@dimen/text_body"
+            android:layout_marginBottom="@dimen/space_sm"
+            android:visibility="gone" />
 
         <FrameLayout
             android:layout_width="match_parent"

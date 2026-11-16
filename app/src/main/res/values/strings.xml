@@ -145,4 +145,11 @@
     <string name="hint_imagen_url">https://…</string>
     <string name="cd_imagen_comida">Imagen de la comida</string>
 
+    <!-- Lista de compras: dónde comprar -->
+    <string name="compras_donde_comprar">Dónde comprar</string>
+    <string name="donde_comprar_sin_maps">Instalá Google Maps para ver dónde comprar</string>
+    <string name="donde_comprar_sin_ubicacion">Activá la ubicación para ver dónde comprar</string>
+    <string name="donde_comprar_sin_ubicacion_actual">No se pudo obtener tu ubicación. Probá de nuevo.</string>
+    <string name="donde_comprar_permiso_denegado">Necesito el permiso de ubicación para mostrarte dónde comprar.</string>
+
 </resources>

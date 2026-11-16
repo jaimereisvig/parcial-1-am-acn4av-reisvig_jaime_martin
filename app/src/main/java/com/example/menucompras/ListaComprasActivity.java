@@ -1,7 +1,14 @@
 package com.example.menucompras;
 
+import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Paint;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +16,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -30,11 +40,25 @@ public class ListaComprasActivity extends AppCompatActivity {
     private TextView tvVacia;
     private LinearLayout llBarra;
     private TextView tvProgreso;
+    private Button btnDondeComprar;
+    private TextView tvDondeComprarHint;
 
     // ingredienteId (como String) de los items marcados como comprados.
     private final Set<String> comprados = new HashSet<>();
     // Items de gondola de la lista actual (para contar progreso).
     private List<ItemCompra> itemsActuales = new ArrayList<>();
+
+    // Pide el permiso de ubicación en runtime; si lo conceden, reintenta abrir Maps.
+    private final ActivityResultLauncher<String> permisoUbicacionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                    concedido -> {
+                        if (concedido) {
+                            abrirDondeComprar();
+                        } else {
+                            Toast.makeText(this, R.string.donde_comprar_permiso_denegado,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +70,9 @@ public class ListaComprasActivity extends AppCompatActivity {
         tvProgreso = findViewById(R.id.tv_progreso);
         Button btnReiniciar = findViewById(R.id.btn_reiniciar);
         btnReiniciar.setOnClickListener(v -> reiniciar());
+        btnDondeComprar = findViewById(R.id.btn_donde_comprar);
+        tvDondeComprarHint = findViewById(R.id.tv_donde_comprar_hint);
+        btnDondeComprar.setOnClickListener(v -> abrirDondeComprar());
     }
 
     @Override
@@ -94,6 +121,7 @@ public class ListaComprasActivity extends AppCompatActivity {
         }
 
         actualizarProgreso();
+        actualizarDondeComprar();
     }
 
     private void agregarItemCompra(LayoutInflater inflater, LinearLayout contenedor, ItemCompra it) {
@@ -166,5 +194,84 @@ public class ListaComprasActivity extends AppCompatActivity {
     private String fmt(double c) {
         if (c == Math.floor(c)) return String.valueOf((long) c);
         return String.valueOf(c);
+    }
+
+    // ---- Dónde comprar (Google Maps centrado en tu ubicación) ----
+
+    private void actualizarDondeComprar() {
+        boolean mapsOk = hayAppDeMapas();
+        boolean ubicacionOk = hayUbicacionActivada();
+        boolean habilitado = mapsOk && ubicacionOk;
+
+        btnDondeComprar.setEnabled(habilitado);
+        btnDondeComprar.setAlpha(habilitado ? 1f : 0.4f);
+
+        if (habilitado) {
+            tvDondeComprarHint.setVisibility(View.GONE);
+        } else {
+            tvDondeComprarHint.setVisibility(View.VISIBLE);
+            tvDondeComprarHint.setText(!mapsOk
+                    ? R.string.donde_comprar_sin_maps
+                    : R.string.donde_comprar_sin_ubicacion);
+        }
+    }
+
+    private boolean hayAppDeMapas() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=test"));
+        intent.setPackage("com.google.android.apps.maps");
+        return intent.resolveActivity(getPackageManager()) != null;
+    }
+
+    private boolean hayUbicacionActivada() {
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (lm == null) return false;
+        boolean gps = false, red = false;
+        try { gps = lm.isProviderEnabled(LocationManager.GPS_PROVIDER); } catch (Exception ignored) {}
+        try { red = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER); } catch (Exception ignored) {}
+        return gps || red;
+    }
+
+    private void abrirDondeComprar() {
+        // 1) Permiso de ubicación (runtime).
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            permisoUbicacionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+            return;
+        }
+        // 2) Última ubicación conocida.
+        Location loc = ultimaUbicacion();
+        if (loc == null) {
+            Toast.makeText(this, R.string.donde_comprar_sin_ubicacion_actual,
+                    Toast.LENGTH_SHORT).show();
+            return;   // No se abre Maps sin ubicación.
+        }
+        // 3) Abrir Maps centrado en tu posición, buscando supermercados.
+        String query = Uri.encode("supermercado");
+        Uri uri = Uri.parse("geo:" + loc.getLatitude() + "," + loc.getLongitude() + "?q=" + query);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage("com.google.android.apps.maps");
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Uri web = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + query);
+            startActivity(new Intent(Intent.ACTION_VIEW, web));
+        }
+    }
+
+    private Location ultimaUbicacion() {
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (lm == null) return null;
+        Location mejor = null;
+        for (String prov : lm.getProviders(true)) {
+            try {
+                Location l = lm.getLastKnownLocation(prov);
+                if (l != null && (mejor == null || l.getTime() > mejor.getTime())) {
+                    mejor = l;
+                }
+            } catch (SecurityException ignored) {
+                // Provider que exige FINE y solo tenemos COARSE: se saltea.
+            }
+        }
+        return mejor;
     }
 }
